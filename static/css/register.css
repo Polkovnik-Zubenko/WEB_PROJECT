@@ -1,0 +1,29 @@
+.register-container {
+    margin-top: 3%;
+    margin-left: 29%;
+    align-items: center;
+    height: 1120px;
+    width: 45%;
+    border: 1px solid #000;
+    margin-bottom: 3%;
+}
+
+.text-register {
+    padding-top: 1%;
+    padding-bottom: 1%;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid #000;
+    font-size: 24px;
+    text-align: center;
+}
+
+.form-register {
+    margin-top: 2%;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin-bottom: 2%;
+}
+
+.form-register p {
+    font-size: 18px;
+}

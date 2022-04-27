@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/register.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <title>Регистрация</title>
+</head>
+<body>
+<div class="register">
+    <div class="register-container">
+        <div class="text-register">Регистрация</div>
+            <form class="form-register" action="" method="post">
+                {{ form.name.label }}<br>
+                <p>{{ form.name(type="text", class="form-control form-control-sm") }}</p>
+                {% for error in form.name.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.surname.label }}<br>
+                <p>{{ form.surname(type="text", class="form-control form-control-sm") }}</p>
+                {% for error in form.surname.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.nickname.label }}<br>
+                <p>{{ form.nickname(type="text", class="form-control form-control-sm") }}</p>
+                {% for error in form.nickname.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.email.label }}<br>
+                <p>{{ form.email(type="email", class="form-control form-control-sm") }}</p>
+                {% for error in form.email.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.country.label }}<br>
+                <p>{{ form.country(type="text", class="form-control form-control-sm") }}</p>
+                {% for error in form.country.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.city.label }}<br>
+                <p>{{ form.city(type="text", class="form-control form-control-sm") }}</p>
+                {% for error in form.city.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.gender.label }}<br>
+                <p>{{ form.gender(type="radio", class="form-control form-control-sm ") }}</p>
+                {% for error in form.gender.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.type_user.label }}<br>
+                <p>{{ form.type_user(type="radio", class="form-control form-control-sm") }} </p>
+                {% for error in form.type_user.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                <div id="hidden-div">
+                    {{ form.school.label }}<br>
+                    <p>{{ form.school(type="text", class="form-control form-control-sm") }}</p>
+                    {% for error in form.school.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                    {{ form.school_class.label }}<br>
+                    <p>{{ form.school_class(type="select", class="form-control form-control-sm") }}</p>
+                    {% for error in form.school_class.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                    {{ form.year_finish_school.label }}<br>
+                    <p>{{ form.year_finish_school(type="select", class="form-control form-control-sm") }}</p>
+                    {% for error in form.year_finish_school.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                {{ form.password.label }}<br>
+                <p>{{ form.password(type="password", class="form-control form-control-sm") }}</p>
+                {% for error in form.password.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+                {{ form.password_again.label }}<br>
+                <p>{{ form.password_again(type="password", class="form-control form-control-sm") }}</p>
+                {% for error in form.password_again.errors %}
+                    <p class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+
+    {#                <p>Фамилия: <input type="text" class="form-control form-control-sm" name=""></p>#}
+    {#                <p>Nickname: <input type="text" class="form-control form-control-sm" name=""></p>#}
+    {#                <p>Email: <input type="email" class="form-control form-control-sm" name=""></p>#}
+    {#                <p>Страна: <input type="text" class="form-control form-control-sm" name=""></p>#}
+    {#                <p>Город: <input type="text" class="form-control form-control-sm" name=""></p>#}
+    {#                <p>Пол:</p>#}
+    {#                <p><input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"#}
+    {#                          value="Male">#}
+    {#                    Мужской &nbsp &nbsp &nbsp &nbsp#}
+    {#                    <input class="form-check-input" type="radio" name="inlineRadioOptions"#}
+    {#                           id="inlineRadio1" value="Female"> Женский</p>#}
+    {#                <p>Тип записи:</p>#}
+    {#                <p><input class="form-check-input" type="radio" name="inlineRadioOptions2" id="inlineRadio1"#}
+    {#                          value="Student" onchange="show_hide()" checked> Ученик &nbsp &nbsp &nbsp &nbsp#}
+    {#                    <input class="form-check-input" type="radio"#}
+    {#                           name="inlineRadioOptions2"#}
+    {#                           id="inlineRadio1" value="Teacher" onchange="show_hide()"> Учитель#}
+    {#                </p>#}
+    {##}
+    {#                <p>Школа: <input type="text" class="form-control form-control-sm" name=""></p>#}
+    {##}
+    {#                <p>Класс: <select class="form-select" aria-label="Default select example" name="">#}
+    {#                    <option selected>Укажите класс обучения</option>#}
+    {#                    <option value="1">1</option>#}
+    {#                    <option value="2">2</option>#}
+    {#                    <option value="3">3</option>#}
+    {#                    <option value="4">4</option>#}
+    {#                    <option value="5">5</option>#}
+    {#                    <option value="6">6</option>#}
+    {#                    <option value="7">7</option>#}
+    {#                    <option value="8">8</option>#}
+    {#                    <option value="9">9</option>#}
+    {#                    <option value="10">10</option>#}
+    {#                    <option value="11">11</option>#}
+    {#                </select></p>#}
+    {#                <p>Год выпуска: <select class="form-select" aria-label="Default select example" name="">#}
+    {#                    <option selected>Укажите год выпуска</option>#}
+    {#                    <option value="2014">2014</option>#}
+    {#                    <option value="2015">2015</option>#}
+    {#                    <option value="2016">2016</option>#}
+    {#                    <option value="2017">2017</option>#}
+    {#                    <option value="2018">2018</option>#}
+    {#                    <option value="2019">2019</option>#}
+    {#                    <option value="2020">2020</option>#}
+    {#                    <option value="2021">2021</option>#}
+    {#                    <option value="2022">2022</option>#}
+    {#                    <option value="2023">2023</option>#}
+    {#                    <option value="202">2024</option>#}
+    {#                </select></p>#}
+    {#                </p>#}
+    {#            </div>#}
+    {#            <p>Пароль: <input type="password" class="form-control form-control-sm" name=""></p>#}
+    {#            <p>Подтверждения пароля: <input type="password" class="form-control form-control-sm" name=""></p>#}
+                <p>{{ form.submit(type="submit", id="registerbtn", class="btn btn-primary btn-block mt-3") }}</p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function show_hide() {
+        item = document.getElementById('hidden-div');
+        if (item.style.display == 'none') {
+            item.style.display = ''
+        } else {
+            item.style.display = 'none'
+        }
+    }
+</script>
+</body>
+</html>

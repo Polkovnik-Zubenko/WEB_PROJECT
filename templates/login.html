@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="page" class="container-fluid mt-0">
+        <div id="page-content" class="row">
+            <div id="region-main-box" class="col-12">
+                <section id="region-main" class="col-12" aria-label="Содержимое">
+                    <span class="notifications" id="user-notifications"></span>
+                    <div role="main"><span id="maincontent"></span>
+                        <div class="my-1 my-sm-5"></div>
+                        <div class="row justify-content-center">
+                            <div class="col-xl-6 col-sm-8 ">
+                                <div class="card">
+                                    <div class="card-block">
+                                        <h2 class="card-header text-center">Информатикс</h2>
+                                        <div class="card-body">
+                                            <div class="row justify-content-md-center">
+                                                <div class="col-md-5">
+                                                    <form class="mt-3" action="" method="post" id="login">
+                                                        {{ form.hidden_tag() }}
+{#                                                        <script>document.getElementById('anchor').value = location.hash;</script>#}
+                                                        <div class="form-group">
+                                                            {{ form.email(class="form-control", type="email",
+                                                            placeholder="Логин / адрес электронной почты") }}<br>
+                                                            {% for error in form.email.errors %}
+                                                                <div class="alert alert-danger" role="alert">
+                                                                    {{ error }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <div class="form-group">
+                                                            {{ form.password(class="form-control", type="password",
+                                                            id="password", placeholder="Пароль") }}<br>
+                                                            {% for error in form.password.errors %}
+                                                                <div class="alert alert-danger" role="alert">
+                                                                    {{ error }}
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <div class="rememberpass mt-3">
+                                                            <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+                                                        </div>
+                                                        <p>{{ form.submit(type="submit", id="loginbtn", class="btn btn-primary btn-block mt-3") }}</p>
+                                                        <div>{{ message }}</div>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div class="forgetpass mt-3">
+                                                        <p>
+                                                            <a href="https://informatics.msk.ru/login/forgot_password.php">Забыли
+                                                                логин или пароль?</a></p>
+                                                    </div>
+
+                                                    <div class="mt-3">
+                                                        В Вашем браузере должен быть разрешен прием cookies
+                                                        <a class="btn btn-link p-0" role="button" data-container="body"
+                                                           data-toggle="popover" data-placement="right"
+                                                           data-content="<div class=&quot;no-overflow&quot;></div> " data-html="true" tabindex="0" data-trigger="focus">
+                                                            <i class="icon fa fa-question-circle text-info fa-fw "
+                                                               title="Справка по использованию элемента «В Вашем браузере должен быть разрешен прием cookies»"
+                                                               aria-label="Справка по использованию элемента «В Вашем браузере должен быть разрешен прием cookies»"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row justify-content-center mt-3">
+                            <div class="col-xl-6 col-sm-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <h2>Вы в первый раз на нашем сайте?</h2>
+                                        </div>
+                                        <div>
+                                            Для полноценного доступа к этому сайту Вам необходимо сначала создать
+                                            учетную запись.
+                                            <form class="mt-3" action="{{ url_for('register_obr') }}"
+                                                  method="get" id="signup">
+                                                <button type="submit" class="btn btn-secondary">Создать учетную запись
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock %}

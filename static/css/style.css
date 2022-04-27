@@ -1,0 +1,636 @@
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-fw {
+    width: 1.2857142857em;
+    text-align: center;
+}
+
+.fa-question-circle:before {
+    content: "";
+}
+
+.fa-key:before {
+    content: "";
+}
+
+.fa-sign-in:before {
+    content: "";
+}
+
+.fa-info:before {
+    content: "";
+}
+
+.fa-unlock-alt:before {
+    content: "";
+}
+
+*, *::before, *::after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+section {
+    display: block;
+}
+
+h2, h3, h4 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+}
+
+a {
+    color: #1177d1;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+a:hover {
+    color: #0b4f8a;
+    text-decoration: underline;
+}
+
+a:not([href]) {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:not([href]):hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+button {
+    border-radius: 0;
+}
+
+button:focus {
+    outline: 1px dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+}
+
+input, button {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+button, input {
+    overflow: visible;
+}
+
+button {
+    text-transform: none;
+}
+
+[role="button"] {
+    cursor: pointer;
+}
+
+button, [type="submit"] {
+    -webkit-appearance: button;
+}
+
+button::-moz-focus-inner, [type="submit"]::-moz-focus-inner {
+    padding: 0;
+    border-style: none;
+}
+
+fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+h2, h3, h4 {
+    margin-bottom: .5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: 1.875rem;
+}
+
+@media (max-width: 1200px) {
+    h2 {
+        font-size: calc(.9975rem + 1.17vw);
+    }
+}
+
+h3 {
+    font-size: 1.640625rem;
+}
+
+@media (max-width: 1200px) {
+    h3 {
+        font-size: calc(.9740625rem + .88875vw);
+    }
+}
+
+h4 {
+    font-size: 1.40625rem;
+}
+
+@media (max-width: 1200px) {
+    h4 {
+        font-size: calc(.950625rem + .6075vw);
+    }
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0;
+    -webkit-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    -o-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+@media (max-width: 1200px) {
+    .form-control {
+        font-size: calc(.90375rem + .045vw);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .form-control {
+        -webkit-transition: none;
+        -o-transition: none;
+        transition: none;
+    }
+}
+
+.form-control::-ms-expand {
+    background-color: transparent;
+    border: 0;
+}
+
+.form-control:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #495057;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #6eb5f3;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 .2rem rgba(17, 119, 209, .75);
+    box-shadow: 0 0 0 .2rem rgba(17, 119, 209, .75);
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control::-moz-placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.form-control:disabled {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+
+.form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+@media (min-width: 576px) {
+    .form-inline label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0;
+    }
+
+    .form-inline .form-control {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+    }
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #343a40;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: .9375rem;
+    line-height: 1.5;
+    border-radius: 0;
+    -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    -o-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+@media (max-width: 1200px) {
+    .btn {
+        font-size: calc(.90375rem + .045vw);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        -webkit-transition: none;
+        -o-transition: none;
+        transition: none;
+    }
+}
+
+.btn:hover {
+    color: #343a40;
+    text-decoration: none;
+}
+
+.btn:focus {
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 .2rem rgba(17, 119, 209, .75);
+    box-shadow: 0 0 0 .2rem rgba(17, 119, 209, .75);
+}
+
+.btn:disabled {
+    opacity: .65;
+}
+
+fieldset:disabled a.btn {
+    pointer-events: none;
+}
+
+.btn-secondary {
+    color: #212529;
+    background-color: #ced4da;
+    border-color: #ced4da;
+}
+
+.btn-secondary:hover {
+    color: #212529;
+    background-color: #b8c1ca;
+    border-color: #b1bbc4;
+}
+
+.btn-secondary:focus {
+    color: #212529;
+    background-color: #b8c1ca;
+    border-color: #b1bbc4;
+    -webkit-box-shadow: 0 0 0 .2rem rgba(180, 186, 191, .5);
+    box-shadow: 0 0 0 .2rem rgba(180, 186, 191, .5);
+}
+
+.btn-secondary:disabled {
+    color: #212529;
+    background-color: #ced4da;
+    border-color: #ced4da;
+}
+
+.btn-link {
+    font-weight: 400;
+    color: #1177d1;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    color: #0b4f8a;
+    text-decoration: underline;
+}
+
+.btn-link:focus {
+    text-decoration: underline;
+}
+
+.btn-link:disabled {
+    color: #6c757d;
+    pointer-events: none;
+}
+
+.clearfix::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.mb-1 {
+    margin-bottom: .25rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.p-0 {
+    padding: 0 !important;
+}
+
+.py-3 {
+    padding-top: 1rem !important;
+}
+
+.py-3 {
+    padding-bottom: 1rem !important;
+}
+
+@media (min-width: 576px) {
+    .mb-sm-0 {
+        margin-bottom: 0 !important;
+    }
+}
+
+.text-info {
+    color: #5bc0de !important;
+}
+
+@media print {
+    *, *::before, *::after {
+        text-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    a:not(.btn) {
+        text-decoration: underline;
+    }
+
+    h2, h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2, h3 {
+        page-break-after: avoid;
+    }
+}
+
+#region-main {
+    overflow-x: auto;
+    overflow-y: visible;
+    background-color: #fff;
+}
+
+@media (min-width: 576px) {
+    #region-main {
+        border: 1px solid rgba(0, 0, 0, .125);
+        padding: 1.25rem;
+    }
+}
+
+#user-notifications {
+    display: block;
+    overflow: hidden;
+}
+
+.mdl-align {
+    text-align: center;
+}
+
+.aalink:focus, a:not([class]):focus {
+    outline: .2rem solid transparent;
+    color: #212529;
+    background-color: #e4f1fd;
+    -webkit-box-shadow: 0 -.2rem #e4f1fd, 0 .2rem #343a40;
+    box-shadow: 0 -.2rem #e4f1fd, 0 .2rem #343a40;
+}
+
+.aalink:focus:hover, a:not([class]):focus:hover {
+    text-decoration: none;
+}
+
+.aabtn:focus, .btn-link:focus, [role="button"]:focus {
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 .2rem rgba(17, 119, 209, .75);
+    box-shadow: 0 0 0 .2rem rgba(17, 119, 209, .75);
+}
+
+.aabtn:focus:hover, .btn-link:focus:hover, [role="button"]:focus:hover {
+    text-decoration: none;
+}
+
+.collapsible-actions {
+    display: none;
+    text-align: right;
+}
+
+.jsenabled .collapsible-actions {
+    display: block;
+}
+
+.collapsible-actions .collapseexpand {
+    padding-left: 20px;
+    background: url(https://informatics.msk.ru/theme/image.php/boost/core/1640770659/t/collapsed) 2px center no-repeat;
+}
+
+.collapsible-actions .collapse-all {
+    background-image: url(https://informatics.msk.ru/theme/image.php/boost/core/1640770659/t/expanded);
+}
+
+#maincontent {
+    display: block;
+    height: 1px;
+    overflow: hidden;
+}
+
+a.skip-block, a.skip {
+    position: absolute;
+    top: -1000em;
+    font-size: .85em;
+    text-decoration: none;
+}
+
+a.skip-block:focus, a.skip-block:active, a.skip:focus, a.skip:active {
+    position: static;
+    display: block;
+}
+
+.skip-block-to {
+    display: block;
+    height: 1px;
+    overflow: hidden;
+}
+
+.invisiblefieldset {
+    display: inline;
+    padding: 0;
+    border-width: 0;
+}
+
+.icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    margin-right: .5rem;
+}
+
+#region-main.has-blocks {
+    display: inline-block;
+    width: calc(100% - 375px);
+}
+
+@media (max-width: 1199.98px) {
+    #region-main.has-blocks {
+        width: 100%;
+        display: block;
+    }
+}
+
+#frontpage-category-combo h2 {
+    margin-bottom: 9px;
+}
+
+#coursesearch {
+    margin-top: 1em;
+    text-align: left;
+}
+
+.coursebox {
+    padding: .5rem;
+}
+
+.coursebox > .info > .coursename a {
+    display: block;
+    background-image: url(https://informatics.msk.ru/theme/image.php/boost/core/1640770659/i/course);
+    background-repeat: no-repeat;
+    padding-left: 21px;
+    background-position: left .2em;
+}
+
+.coursebox > .info > .coursename {
+    float: left;
+    clear: left;
+}
+
+.coursebox > .info > .coursename {
+    margin: 5px;
+    padding: 0;
+}
+
+.coursebox .moreinfo, .coursebox .enrolmenticons {
+    padding: 3px 0;
+    float: right;
+}
+
+.coursebox .content {
+    clear: both;
+}
+
+.coursebox.collapsed {
+    margin-bottom: 0;
+}
+
+.coursebox.collapsed > .content {
+    display: none;
+}
+
+.courses .coursebox.collapsed {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+
+.courses .coursebox.even {
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.course_category_tree .category > .info > .categoryname {
+    background-image: url(https://informatics.msk.ru/theme/image.php/boost/core/1640770659/t/collapsed_empty);
+    background-repeat: no-repeat;
+    padding: 2px 18px;
+    margin: 3px;
+    background-position: center left;
+}
+
+.course_category_tree .category.with_children > .info > .categoryname {
+    background-image: url(https://informatics.msk.ru/theme/image.php/boost/core/1640770659/t/expanded);
+    cursor: pointer;
+}
+
+.course_category_tree .category.with_children.collapsed > .info > .categoryname {
+    background-image: url(https://informatics.msk.ru/theme/image.php/boost/core/1640770659/t/collapsed);
+}
+
+.course_category_tree .category.collapsed > .content {
+    display: none;
+}
+
+.course_category_tree .category > .info {
+    clear: both;
+}
+
+.course_category_tree .category > .content {
+    padding-left: 16px;
+}
+
+:target::before {
+    content: " ";
+    display: block;
+    height: 60px;
+    margin-top: -60px;
+    width: 1px;
+    pointer-events: none;
+}
+
+fieldset.coursesearchbox label {
+    display: inline;
+}
+
+.btn-secondary:focus {
+    outline: .2rem solid #5f6e7d;
+    -webkit-box-shadow: inset 0 0 0 2px #fff;
+    box-shadow: inset 0 0 0 2px #fff;
+}
+/*! CSS Used fontfaces */
+@font-face {
+    font-family: "FontAwesome";
+    src: url(https://informatics.msk.ru/theme/font.php/boost/core/1640770659/fontawesome-webfont.eot?v=4.7.0);
+    src: url("https://informatics.msk.ru/theme/font.php/boost/core/1640770659/fontawesome-webfont.eot#iefix&v=4.7.0") format("embedded-opentype"), url(https://informatics.msk.ru/theme/font.php/boost/core/1640770659/fontawesome-webfont.woff2?v=4.7.0) format("woff2"), url(https://informatics.msk.ru/theme/font.php/boost/core/1640770659/fontawesome-webfont.woff?v=4.7.0) format("woff"), url(https://informatics.msk.ru/theme/font.php/boost/core/1640770659/fontawesome-webfont.ttf?v=4.7.0) format("truetype"), url("https://informatics.msk.ru/theme/font.php/boost/core/1640770659/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format("svg");
+    font-weight: 400;
+    font-style: normal;
+}
