@@ -14,8 +14,8 @@
 <body>
     <div class="container">
         <div id="main">
-        
-        
+
+
          <div class="row" id="real-estates-detail">
          <div class="col-lg-4 col-md-4 col-xs-12">
          <div class="panel panel-default">
@@ -30,11 +30,11 @@
          <div class="text-center" id="author">
          <img class = 'photo'src="{{path}}">
          <h3>{{u.name}} {{u.surname}}</h3>
-         <medium class="label label-warning">Тамбов</medium>
+         <medium class="label label-warning">{{ u.country }} {{ u.city }}</medium>
          <p></p>
          <form class="formochka" action="/path" method="post" enctype="multipart/form-data">
             <p><input type="file" name="file"></p>
-            <p><input type="submit" value="Upload"></p>
+            <p><input type="submit" value="Загрузить"></p>
         </form>
          </div>
          </div>
@@ -55,11 +55,23 @@
          <table class="table table-th-block">
          <tbody>
              <form action="/edit-profile" method="POST">
-                <tr><td class="active">Nickname: </td><td><input class="form-control" type="text" name="nickname" value="{{u.nickname}}"></td></tr>
-                <tr><td class="active">Email адресс: </td><td>{{u.email}}</td></tr>
-                <tr><td class="active">Полных лет:</td><td><input class="form-control" type="text" name="age" value="19"></td></tr>
-                <tr><td class="active">Пол: </td><td><input class="form-control" type="text" name="pol" value="Мужской"></td></tr>
-                <tr><td class="active">Школа: </td><td><input class="form-control" type="text" name="school" value="№36"></td></tr>
+                 <tr><td class="active">Nickname: </td><td><input class="form-control" type="text" name="nickname" value="{{u.nickname}}"></td></tr>
+            <tr><td class="active">Email адресс: </td><td>{{u.email}}</td></tr>
+            {% if u.gender == "man"%}
+                <tr><td class="active">Пол: <td><input class="form-control" type="text" name="nickname" value="Мужской"></td></tr>
+            {% else %}
+                <tr><td class="active">Пол: <td><input class="form-control" type="text" name="nickname" value="Женский"></td></tr>
+            {% endif %}
+            {% if u.type_user == 'student' %}
+                <tr><td class="active">Тип записи: <td><input class="form-control" type="text" name="nickname" value="Ученик"></td></tr>
+            {% else %}
+                <tr><td class="active">Тип записи: <td><input class="form-control" type="text" name="nickname" value="Преподаватель"></td></tr>
+            {% endif %}
+            {% if u.type_user == 'student' %}
+                <tr><td class="active">Школа: <td><input class="form-control" type="text" name="nickname" value="{{ u.school }}"></td></tr>
+                <tr><td class="active">Класс обучения: <td><input class="form-control" type="text" name="nickname" value="{{ u.school_class }}"></td></tr>
+                <tr><td class="active">Год окончания школы: <td><input class="form-control" type="text" name="nickname" value="{{ u.year_finish }}"></td></tr>
+            {% endif %}
                 <tr><td></td><td><input type="submit" class='btn btn-primary' value="Подтверждение изменений"></td></tr>
              </form>
         </tbody>
@@ -72,7 +84,7 @@
          </div>
          </div>
         </div>
-        
+
         </div><!-- /.main -->
         </div><!-- /.container -->
 </body>

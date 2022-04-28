@@ -32,10 +32,6 @@
          <h3>{{u.name}} {{u.surname}}</h3>
          <medium class="label label-warning">{{ u.country }} {{ u.city }}</medium>
          <p></p>
-         <form class="formochka" action="/path" method="post" enctype="multipart/form-data">
-            <p><input type="file" name="file"></p>
-            <p><input type="submit" value="Изменить"></p>
-        </form>
          </div>
          </div>
          </div>
@@ -44,7 +40,7 @@
          <div class="panel">
          <div class="panel-body">
          <ul id="myTab" class="nav nav-pills">
-         <li class="active"><a href="#detail" data-toggle="tab">О пользователе</a></li>
+         <li class="active about-user"><a href="#detail" data-toggle="tab">О пользователе</a></li>
          <li class=""><a href="{{url_for('profile_edit', id_user=u.id)}}">Редактировать профиль</a></li>
          <li class=""><a href="/">Вернуться на главую страницу</a></li>
 
@@ -63,9 +59,9 @@
                 <tr><td class="active">Пол: </td><td>Женский</td></tr>
             {% endif %}
             {% if u.type_user == 'student' %}
-                <tr><td class="active">Тип записи: </td><td>Школьник</td></tr>
+                <tr><td class="active">Тип записи: </td><td>Ученик</td></tr>
             {% else %}
-                <tr><td class="active">Тип записи: </td><td>Учитель</td></tr>
+                <tr><td class="active">Тип записи: </td><td>Преподаватель</td></tr>
             {% endif %}
             {% if u.type_user == 'student' %}
                 <tr><td class="active">Школа: </td><td>{{ u.school }}</td></tr>
