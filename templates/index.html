@@ -56,7 +56,7 @@
                                                                         id="yui_3_17_2_1_1650453415800_37">{{ current_user.name }}</span><span
                                                                         class="avatars"><span
                                                                         class="avatar current"><img
-                                                                        src="/static/img/profiles/{{ current_user.id }}.png"
+                                                                        src="../static/img/profiles/{{ current_user.id }}.png"
                                                                         class="userpicture" width="35" height="35"
                                                                         aria-hidden="true"></span></span></span>
                                                                 <b class="caret"></b>
@@ -112,22 +112,11 @@
                                 </div>
                             </div>
                         </div>
-                        {#                        <div onmouseover="show()" onmouseleave="hide()">#}
-                        {#                            <div>#}
-                        {#                                <a class="navbar-brand" href="#">{{ current_user.name }}</a>#}
-                        {#                            </div>#}
-                        {#                            <div id="hidden-div" style="display: none">#}
-                        {#                                <a class="personal_of" href="">Личный кабинет</a>#}
-                        {#                                <a class="navbar-brand" href="">Статистика пользователя</a>#}
-                        {#                                <a class="navbar-brand" href="м">Выход</a>#}
-                        {#                            </div>#}
-                        {#                        </div>#}
-                        {#                        <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>#}
                     {% else %}
                         <p>
-                            <a class=" btn btn-success login_button_style" href="/login" style="margin-top: 13px; ">Войти</a>
+                            <a class=" btn btn-success login_button_style" href="/login" style="margin-top: 13px; background-color: #9a0097; color: whitesmoke">Войти</a>
                             <a class=" btn btn-primary register_button_style" href="{{ url_for('register_obr') }}"
-                               style="margin-top: 13px;">Зарегистрироваться</a>
+                               style="margin-top: 13px; background-color: #9a0097; color: whitesmoke">Зарегистрироваться</a>
                         </p>
                     {% endif %}
                 </li>

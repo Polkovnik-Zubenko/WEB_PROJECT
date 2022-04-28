@@ -15,6 +15,8 @@
     border-bottom: 1px solid #000;
     font-size: 24px;
     text-align: center;
+    background-color: #9a0097;
+    color: whitesmoke;
 }
 
 .form-register {
@@ -27,3 +29,22 @@
 .form-register p {
     font-size: 18px;
 }
+.btn-position {
+    float: right;
+    margin-top: -54px;
+    border-color: #9a0097;
+    background-color: #9a0097;
+}
+.btn-position:hover{
+    background-color: #9a0097;
+    border-color: black;
+}
+.submbtn {
+    border-color: #9a0097;
+    background-color: #9a0097;
+}
+.submbtn:hover{
+    background-color: #9a0097;
+    border-color: black;
+}
+

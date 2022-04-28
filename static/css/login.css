@@ -1,0 +1,23 @@
+.btn-log {
+    border-color: #9a0097;
+    background-color: #9a0097;
+}
+.btn-log:hover {
+    background-color: #9a0097;
+    border-color: black;
+}
+.btn-log-reg {
+    background-color: #9a0097;
+    color: whitesmoke;
+}
+.btn-log-reg:hover {
+    background-color: #9a0097;
+    color: whitesmoke;
+    border-color: black;
+}
+.btn-log-reg:active {
+    background-color: #9a0097;
+    color: whitesmoke;
+    border-color: black;
+    transform: translateY(4px);
+}

@@ -12,13 +12,12 @@
                             <div class="col-xl-6 col-sm-8 ">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h2 class="card-header text-center">Информатикс</h2>
+                                        <h2 class="card-header text-center" style="color: whitesmoke; background-color: #9a0097">Информатикс</h2>
                                         <div class="card-body">
                                             <div class="row justify-content-md-center">
                                                 <div class="col-md-5">
                                                     <form class="mt-3" action="" method="post" id="login">
                                                         {{ form.hidden_tag() }}
-{#                                                        <script>document.getElementById('anchor').value = location.hash;</script>#}
                                                         <div class="form-group">
                                                             {{ form.email(class="form-control", type="email",
                                                             placeholder="Логин / адрес электронной почты") }}<br>
@@ -40,14 +39,14 @@
                                                         <div class="rememberpass mt-3">
                                                             <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
                                                         </div>
-                                                        <p>{{ form.submit(type="submit", id="loginbtn", class="btn btn-primary btn-block mt-3") }}</p>
+                                                        <p>{{ form.submit(type="submit", id="loginbtn", class="btn btn-primary btn-block mt-3 btn-log") }}</p>
                                                         <div>{{ message }}</div>
                                                     </form>
                                                 </div>
                                                 <div class="col-md-5">
                                                     <div class="forgetpass mt-3">
                                                         <p>
-                                                            <a href="https://informatics.msk.ru/login/forgot_password.php">Забыли
+                                                            <a href="https://informatics.msk.ru/login/forgot_password.php" class="forgot-log" style="color: #c72929">Забыли
                                                                 логин или пароль?</a></p>
                                                     </div>
 
@@ -82,7 +81,7 @@
                                             учетную запись.
                                             <form class="mt-3" action="{{ url_for('register_obr') }}"
                                                   method="get" id="signup">
-                                                <button type="submit" class="btn btn-secondary">Создать учетную запись
+                                                <button type="submit" class="btn btn-secondary btn-log-reg">Создать учетную запись
                                                 </button>
                                             </form>
                                         </div>

@@ -41,7 +41,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     param = {}
-    # param[current_user] = current_user
+    print(current_user.is_authenticated)
     return render_template('index.html', **param)
 
 
@@ -52,12 +52,16 @@ def error_404(err):
 
 
 # admin@gmail.com
-# admin135official
+# admin135officialWR
 # ___________________
 # pro_gamer@gmail.com
-# qwe1234rteop
+# qwe1234rteOP05
+#____________________
+# yandex@gmail.com
+# Y@nd3x5555
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if session.get('user'):
@@ -72,12 +76,13 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=["GET", "POST"])
 def register_obr():
-    form = RegisterForm()
+    form = RegisterForm(meta={'csrf': False})
+    print(form.validate_on_submit())
     if form.validate_on_submit():
         name = form.name.data
-        surname = form.surname
+        surname = form.surname.data
         nickname = form.nickname.data
         email = form.email.data
         country = form.country.data
@@ -90,8 +95,8 @@ def register_obr():
         password1 = form.password.data
 
         email_check = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
-        password_check = [re.search(r"[a-z]", password1), re.search(r"[A-Z]", password1), re.search(r"[0-9]", password1),
-                          re.search(r"\W", password1)]
+        password_check = [re.search(r"[a-z]", password1), re.search(r"[A-Z]", password1),
+                          re.search(r"[0-9]", password1)]
         if form.password.data != form.password_again.data:
             return render_template('register.html', title='Регистрация', form=form, message="Пароли не совпадают")
         elif not all(password_check):
@@ -111,7 +116,7 @@ def register_obr():
                 session1 = create_session()
                 user_new = User(name=name, surname=surname, nickname=nickname, email=email, country=country, city=city,
                                 gender=gender, type_user=type_user, school=school, school_class=school_class,
-                                year_finish_school=year_finish_school, password1=password1)
+                                year_finish_school=year_finish_school, hashed_password=password1)
                 user_new.set_password(password1)
                 session1.add(user_new)
                 session1.commit()
@@ -126,11 +131,19 @@ def profile(id_user):
     u = session2.query(User).filter(User.id == id_user).first()
     ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
     path = f'../static/img/profiles/{id_user}.png'
-    # param[id_user] = id_user
     if session.get('user') == u.id:
         return render_template('profile.html', title=f'{u.nickname}', u=u, path=path)
     else:
         return redirect(url_for('register_page'))
+
+
+@app.route('/profile-edit/<int:id_user>')
+def profile_edit(id_user):
+    db_sess = db_session.create_session()
+    u = db_sess.query(User).filter(User.id == id_user).first()
+    ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
+    path = f'../static/img/profiles/{id_user}.png'
+    return render_template('profile_edit.html', title=f'{u.nickname}', u=u, path=path)
 
 
 @app.route('/path', methods=["POST", "GET"])
