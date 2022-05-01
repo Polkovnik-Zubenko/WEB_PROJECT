@@ -17,6 +17,8 @@ from forms.user import RegisterForm
 from files import db_session
 import datetime
 from files.users import User
+from email_send import send_email
+from forms.forgot_password import ForgotForm
 
 app = Flask(__name__)
 
@@ -51,14 +53,6 @@ def error_404(err):
     return render_template('404.html')
 
 
-# admin@gmail.com
-# admin135officialWR
-# ___________________
-# pro_gamer@gmail.com
-# qwe1234rteOP05
-#____________________
-# yandex@gmail.com
-# Y@nd3x5555
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -74,6 +68,16 @@ def login():
             return redirect("/")
         return render_template('login.html', message="Неправильный логин или пароль", form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/forgot_password', methods=["GET", "POST"])
+def forgot_password():
+    form = ForgotForm()
+    if form.validate_on_submit():
+        send_email(form.email.data)
+        return redirect('/')
+    return render_template('forgot_email.html', form=form)
+
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -139,10 +143,15 @@ def profile(id_user):
 
 @app.route('/profile-edit/<int:id_user>')
 def profile_edit(id_user):
+    form = User()
     db_sess = db_session.create_session()
     u = db_sess.query(User).filter(User.id == id_user).first()
     ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
     path = f'../static/img/profiles/{id_user}.png'
+    # if request.method == "GET":
+    #     form.name.data = news.title
+    #     form.surname.data = news.content
+    #     form.nickname.data = news.is_private
     return render_template('profile_edit.html', title=f'{u.nickname}', u=u, path=path)
 
 

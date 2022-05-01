@@ -15,7 +15,7 @@
     color: whitesmoke;
     border-color: black;
 }
-.btn-log-reg:active {
+.btn-log-reg:active, .btn-log:active {
     background-color: #9a0097;
     color: whitesmoke;
     border-color: black;

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/forgot_password.css">
+    <title>Восстановление пароля</title>
+</head>
+<body>
+<div class="row extra-row">
+    <div class="large-left col-sm-12">
+        <div class="row">
+            <div id="center_column" class="center_column col-xs-12 col-sm-12 accordionBox">
+
+
+                <div class="box">
+                    <h1 class="page-heading" style="text-align: center">Забыли пароль?</h1>
+                    <h2 class="page-heading2" style="text-align: center">Введите пожалуйста e-mail адрес использованный
+                        при регистрации. На него будет
+                        выслан ваш новый пароль.</h2>
+                    <form action="" method="post" class="std" id="form_forgotpassword">
+                        <div class="form-group">
+                            {{ form.email(class="form-control text-email", type="email", placeholder="Адрес электронной почты") }}<br>
+                        </div>
+                        <p class="submit btn-sub">
+                            <button type="submit" class="btn btn-default btn-md icon-right btn1">
+                                <span>Восстановить пароль</span>
+                            </button>
+                        </p>
+                    </form>
+                </div>
+                <p>
+                    <a class="btn btn-default btn-sm icon-left" href="/login" title="Назад к форме &quot;Вход&quot;"
+                       rel="nofollow">
+      <span>
+        Назад к форме "Вход"
+      </span>
+                    </a>
+                </p>
+            </div><!-- #center_column -->
+        </div><!--.large-left-->
+    </div><!--.row-->
+</div>
+
+</body>
+</html>

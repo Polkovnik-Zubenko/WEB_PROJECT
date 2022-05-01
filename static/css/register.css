@@ -29,7 +29,7 @@
 .form-register p {
     font-size: 18px;
 }
-.btn-position {
+.btn-position, .btn-position:hover {
     float: right;
     margin-top: -54px;
     border-color: #9a0097;
