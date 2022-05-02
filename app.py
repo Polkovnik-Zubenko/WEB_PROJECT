@@ -19,6 +19,7 @@ import datetime
 from files.users import User
 from email_send import send_email
 from forms.forgot_password import ForgotForm
+from forms.profile_edit import Profile
 
 app = Flask(__name__)
 
@@ -53,18 +54,17 @@ def error_404(err):
     return render_template('404.html')
 
 
-
-
 @app.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
-    if session.get('user'):
-        return redirect(url_for('profile', id_user=session.get('user')))
+    if current_user.is_authenticated:
+        return redirect(url_for('profile', id_user=current_user.id))
     elif form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
-            session['user'] = user.id
+            login_user(user, remember=form.remember_me.data)
+            # session['user'] = user.id
             return redirect("/")
         return render_template('login.html', message="Неправильный логин или пароль", form=form)
     return render_template('login.html', title='Авторизация', form=form)
@@ -74,16 +74,20 @@ def login():
 def forgot_password():
     form = ForgotForm()
     if form.validate_on_submit():
-        send_email(form.email.data)
+        send_email(str(form.email.data))
         return redirect('/')
     return render_template('forgot_email.html', form=form)
 
 
+@app.route('/forgot_password/<secret_key>')
+def func(secret_key):
+    param = {}
+    pass
+
 
 @app.route('/register', methods=["GET", "POST"])
 def register_obr():
-    form = RegisterForm(meta={'csrf': False})
-    print(form.validate_on_submit())
+    form = RegisterForm()
     if form.validate_on_submit():
         name = form.name.data
         surname = form.surname.data
@@ -124,43 +128,69 @@ def register_obr():
                 user_new.set_password(password1)
                 session1.add(user_new)
                 session1.commit()
-                return redirect('/')
+                return redirect('/login')
     return render_template('register.html', form=form)
 
 
 @app.route('/profile/<int:id_user>')
+@login_required
 def profile(id_user):
     session2 = create_session()
     param = {}
     u = session2.query(User).filter(User.id == id_user).first()
     ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
     path = f'../static/img/profiles/{id_user}.png'
-    if session.get('user') == u.id:
+    if current_user.id == u.id:
         return render_template('profile.html', title=f'{u.nickname}', u=u, path=path)
     else:
         return redirect(url_for('register_page'))
 
 
 @app.route('/profile-edit/<int:id_user>')
+@login_required
 def profile_edit(id_user):
-    form = User()
+    form = Profile()
+    files_lst = os.listdir(basedir)
     db_sess = db_session.create_session()
     u = db_sess.query(User).filter(User.id == id_user).first()
     ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
     path = f'../static/img/profiles/{id_user}.png'
-    # if request.method == "GET":
-    #     form.name.data = news.title
-    #     form.surname.data = news.content
-    #     form.nickname.data = news.is_private
+    if request.method == "GET":
+        db_sess = db_session.create_session()
+        u = db_sess.query(User).filter(User.id == id_user).first()
+        if u:
+            form.name_surname.data = f'{u.name} {u.surname}'
+            form.country_city.data = f'{u.country} {u.city}'
+            form.nickname.data = u.nickname
+            form.gender.data = u.gender
+            print(form.name_surname.data, form.country_city.data, form.nickname.data, form.gender.data)
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        u = db_sess.query(User).filter(User.id == id_user).first()
+        if u:
+            u.name = form.name_surname.data.split(' ')[0]
+            u.surname = form.name_surname.data.split(' ')[1]
+            u.country = form.country_city.data.split(" ")[0]
+            u.city = form.country_city.data.split(" ")[1]
+            u.nickname = form.nickname.data
+            u.gender = form.gender.data
+            print(u.name, u.surname, u.country, u.city, u.nickname, u.gender)
+            db_sess.commit()
+            return redirect('/profile')
+        else:
+            abort(404)
     return render_template('profile_edit.html', title=f'{u.nickname}', u=u, path=path)
 
 
 @app.route('/path', methods=["POST", "GET"])
 def upload_file():
+    param = {}
     if request.method == "POST":
         file = request.files['file']
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'{session.get("user")}.png'))
-        return redirect(url_for('profile', id_user=session.get('user')))
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'{current_user.id}.png'))
+        return redirect(url_for('profile', id_user=current_user.id))
 
 
 @app.route('/logout')
@@ -172,3 +202,5 @@ def logout():
 
 if __name__ == '__main__':
     app.run()
+
+

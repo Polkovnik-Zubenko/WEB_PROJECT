@@ -28,7 +28,12 @@
                     </div>
                     <div class="panel-body">
                         <div class="text-center" id="author">
-                            <img class='photo' src="{{ path }}">
+                            {% if id_user in files_lst %}
+                                <img class='photo' src="{{ path }}">
+                            {% else %}
+                                <img class='photo' src="/static/img/default_photo.jpg">
+                            {% endif %}
+
                             <h3>{{ u.name }} {{ u.surname }}</h3>
                             <medium class="label label-warning">{{ u.country }} {{ u.city }}</medium>
                             <p></p>
@@ -41,8 +46,13 @@
                     <div class="panel-body">
                         <ul id="myTab" class="nav nav-pills">
                             <li class="active">
-                                <a href="#detail" data-toggle="tab" style="background-color: #9a0097;">О пользователе</a></li>
-                            <li class="edit-profile" ><a href="{{ url_for('profile_edit', id_user=u.id) }}" style="color: #c72929">Редактирование</a>
+                                <a href="#detail" data-toggle="tab" style="background-color: #9a0097;">О
+                                    пользователе</a></li>
+                            <li class="edit-profile"><a href="{{ url_for('profile_edit', id_user=u.id) }}"
+                                                        style="color: #c72929">Редактирование</a>
+                            </li>
+                            <li class="edit-profile"><a href="{{ url_for('profile_edit', id_user=u.id) }}"
+                                                        style="color: #c72929">Изменить пароль</a>
                             </li>
                             <li class=""><a href="/" style="color: #c72929">Вернуться на главую страницу</a></li>
 
@@ -50,7 +60,7 @@
                         <div id="myTabContent" class="tab-content">
                             <hr>
                             <div class="tab-pane fade active in" id="detail">
-                                <h4>История профиля</h4>
+                                <h4>Данные пользователя</h4>
                                 <table class="table table-th-block">
                                     <tbody>
                                     <tr>
@@ -58,7 +68,7 @@
                                         <td>{{ u.nickname }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="active">Email адресс:</td>
+                                        <td class="active">Email адрес:</td>
                                         <td>{{ u.email }}</td>
                                     </tr>
                                     {% if u.gender == "man" %}
@@ -94,7 +104,7 @@
                                         </tr>
                                         <tr>
                                             <td class="active">Год окончания школы:</td>
-                                            <td>{{ u.year_finish }}</td>
+                                            <td>{{ u.year_finish_school }}</td>
                                         </tr>
                                     {% endif %}
                                     </tbody>

@@ -53,12 +53,21 @@
                                                                 <span class="userbutton"
                                                                       id="yui_3_17_2_1_1650453415800_38"><span
                                                                         class="usertext mr-1"
-                                                                        id="yui_3_17_2_1_1650453415800_37">{{ current_user.name }}</span><span
+                                                                        id="yui_3_17_2_1_1650453415800_37">{{ current_user.name }} {{ current_user.surname }}</span><span
                                                                         class="avatars"><span
-                                                                        class="avatar current"><img
-                                                                        src="../static/img/profiles/{{ current_user.id }}.png"
-                                                                        class="userpicture" width="35" height="35"
-                                                                        aria-hidden="true"></span></span></span>
+                                                                        class="avatar current">
+                                                                      {% if id_user in files_lst %}
+                                                                          <img src="{{ path }}" class="userpicture"
+                                                                               width="35"
+                                                                               height="35"
+                                                                               aria-hidden="true">
+                                                                      {% else %}
+                                                                          <img src="/static/img/default_photo.jpg"
+                                                                               class="userpicture" width="35"
+                                                                               height="35"
+                                                                               aria-hidden="true">
+                                                                      {% endif %}
+                                                                            </span></span></span>
                                                                 <b class="caret"></b>
                                                             </a>
                                                         </button>
@@ -114,7 +123,8 @@
                         </div>
                     {% else %}
                         <p>
-                            <a class=" btn btn-success login_button_style" href="/login" style="margin-top: 13px; background-color: #9a0097; color: whitesmoke">Войти</a>
+                            <a class=" btn btn-success login_button_style" href="/login"
+                               style="margin-top: 13px; background-color: #9a0097; color: whitesmoke">Войти</a>
                             <a class=" btn btn-primary register_button_style" href="{{ url_for('register_obr') }}"
                                style="margin-top: 13px; background-color: #9a0097; color: whitesmoke">Зарегистрироваться</a>
                         </p>
@@ -155,7 +165,7 @@
                             <div class="d-sm-flex align-items-center">
                                 <div class="mr-auto">
                                     <div class="page-context-header">
-                                        <div class="page-header-headings"><h1>Информатикс</h1></div>
+                                        <div class="page-header-headings"><h1>OAP</h1></div>
                                     </div>
                                 </div>
 
@@ -324,55 +334,7 @@
                                                             </div>
                                                             <div class="content"></div>
                                                         </div>
-                                                        {#                                                        <div class="coursebox clearfix odd collapsed" files-courseid="95"#}
-                                                        {#                                                             files-type="1">#}
-                                                        {#                                                            <div class="info">#}
-                                                        {#                                                                <div class="coursename"><a class="aalink"#}
-                                                        {#                                                                                           href="https://informatics.msk.ru/course/view.php?id=95">Учим#}
-                                                        {#                                                                    python (в стадии разработки)</a></div>#}
-                                                        {#                                                                <div class="moreinfo"><a title="Описание"#}
-                                                        {#                                                                                         href="https://informatics.msk.ru/course/info.php?id=95"><i#}
-                                                        {#                                                                        class="icon fa fa-info fa-fw " title="Описание"#}
-                                                        {#                                                                        aria-label="Описание"></i></a></div>#}
-                                                        {#                                                                <div class="enrolmenticons"><i#}
-                                                        {#                                                                        class="icon fa fa-unlock-alt fa-fw "#}
-                                                        {#                                                                        title="Гостевой доступ"#}
-                                                        {#                                                                        aria-label="Гостевой доступ"></i></div>#}
-                                                        {#                                                            </div>#}
-                                                        {#                                                            <div class="content"></div>#}
-                                                        {#                                                        </div>#}
-                                                        {#                                                        <div class="coursebox clearfix even collapsed"#}
-                                                        {#                                                             files-courseid="33" files-type="1">#}
-                                                        {#                                                            <div class="info">#}
-                                                        {#                                                                <div class="coursename"><a class="aalink"#}
-                                                        {#                                                                                           href="https://informatics.msk.ru/course/view.php?id=33">Особенности#}
-                                                        {#                                                                    языков программирования</a></div>#}
-                                                        {#                                                                <div class="moreinfo"><a title="Описание"#}
-                                                        {#                                                                                         href="https://informatics.msk.ru/course/info.php?id=33"><i#}
-                                                        {#                                                                        class="icon fa fa-info fa-fw " title="Описание"#}
-                                                        {#                                                                        aria-label="Описание"></i></a></div>#}
-                                                        {#                                                                <div class="enrolmenticons"><i#}
-                                                        {#                                                                        class="icon fa fa-unlock-alt fa-fw "#}
-                                                        {#                                                                        title="Гостевой доступ"#}
-                                                        {#                                                                        aria-label="Гостевой доступ"></i></div>#}
-                                                        {#                                                            </div>#}
-                                                        {#                                                            <div class="content"></div>#}
-                                                        {#                                                        </div>#}
-                                                        {#                                                        <div class="coursebox clearfix odd last collapsed"#}
-                                                        {#                                                             files-courseid="83" files-type="1">#}
-                                                        {#                                                            <div class="info">#}
-                                                        {#                                                                <div class="coursename"><a class="aalink"#}
-                                                        {#                                                                                           href="https://informatics.msk.ru/course/view.php?id=83">Составление#}
-                                                        {#                                                                    тестов к задачам</a></div>#}
-                                                        {#                                                                <div class="moreinfo"><a title="Описание"#}
-                                                        {#                                                                                         href="https://informatics.msk.ru/course/info.php?id=83"><i#}
-                                                        {#                                                                        class="icon fa fa-info fa-fw " title="Описание"#}
-                                                        {#                                                                        aria-label="Описание"></i></a></div>#}
-                                                        {#                                                                <div class="enrolmenticons"><i#}
-                                                        {#                                                                        class="icon fa fa-unlock-alt fa-fw "#}
-                                                        {#                                                                        title="Гостевой доступ"#}
-                                                        {#                                                                        aria-label="Гостевой доступ"></i></div>#}
-                                                        {#                                                            </div>#}
+
                                                         <div class="content"></div>
                                                     </div>
                                                 </div>
