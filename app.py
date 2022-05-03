@@ -20,6 +20,7 @@ from files.users import User
 from email_send import send_email
 from forms.forgot_password import ForgotForm
 from forms.profile_edit import Profile
+from forms.profile_new_password import RecoveryPassword
 
 app = Flask(__name__)
 
@@ -44,8 +45,15 @@ def load_user(user_id):
 @app.route('/')
 def index():
     param = {}
-    print(current_user.is_authenticated)
-    return render_template('index.html', **param)
+    if current_user.is_authenticated:
+        files_lst = os.listdir(basedir)
+        key = f'{current_user.id}' + '.png'
+        path = f'/static/img/profiles/{current_user.id}.png'
+        param['files_lst'] = files_lst
+        param['key'] = key
+        param['path'] = path
+        return render_template('index.html', **param)
+    return render_template('index.html')
 
 
 @app.errorhandler(404)
@@ -64,7 +72,6 @@ def login():
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            # session['user'] = user.id
             return redirect("/")
         return render_template('login.html', message="Неправильный логин или пароль", form=form)
     return render_template('login.html', title='Авторизация', form=form)
@@ -137,11 +144,13 @@ def register_obr():
 def profile(id_user):
     session2 = create_session()
     param = {}
+    files_lst = os.listdir(basedir)
+    key = f'{id_user}' + '.png'
     u = session2.query(User).filter(User.id == id_user).first()
     ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
-    path = f'../static/img/profiles/{id_user}.png'
+    path = f'/static/img/profiles/{id_user}.png'
     if current_user.id == u.id:
-        return render_template('profile.html', title=f'{u.nickname}', u=u, path=path)
+        return render_template('profile.html', title=f'{u.nickname}', u=u, path=path, files_lst=files_lst, key=key)
     else:
         return redirect(url_for('register_page'))
 
@@ -151,6 +160,7 @@ def profile(id_user):
 def profile_edit(id_user):
     form = Profile()
     files_lst = os.listdir(basedir)
+    key = f'{id_user}' + '.png'
     db_sess = db_session.create_session()
     u = db_sess.query(User).filter(User.id == id_user).first()
     ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
@@ -181,7 +191,14 @@ def profile_edit(id_user):
             return redirect('/profile')
         else:
             abort(404)
-    return render_template('profile_edit.html', title=f'{u.nickname}', u=u, path=path)
+    return render_template('profile_edit.html', title=f'{u.nickname}', u=u, path=path, files_lst=files_lst, key=key)
+
+
+# @app.route('/recovery-password/<int:id_user>')
+# @login_required
+# def recovery_password(id_user):
+#     form = RecoveryPassword()
+#     if form.validate_on_submit():
 
 
 @app.route('/path', methods=["POST", "GET"])
@@ -190,7 +207,7 @@ def upload_file():
     if request.method == "POST":
         file = request.files['file']
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'{current_user.id}.png'))
-        return redirect(url_for('profile', id_user=current_user.id))
+        return redirect(url_for('profile_edit', id_user=current_user.id))
 
 
 @app.route('/logout')
