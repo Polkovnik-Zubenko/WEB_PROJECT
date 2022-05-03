@@ -12,6 +12,7 @@ from flask_login import LoginManager, login_required, login_user, current_user, 
 from flask_sqlalchemy import SQLAlchemy
 
 from files.db_session import SqlAlchemyBase
+from files.new_password import Password
 from forms.login import LoginForm
 from forms.user import RegisterForm
 from files import db_session
@@ -21,6 +22,7 @@ from email_send import send_email
 from forms.forgot_password import ForgotForm
 from forms.profile_edit import Profile
 from forms.profile_new_password import RecoveryPassword
+from email_send import create_secret_key
 
 app = Flask(__name__)
 
@@ -68,7 +70,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('profile', id_user=current_user.id))
     elif form.validate_on_submit():
-        db_sess = db_session.create_session()
+        db_sess = create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
@@ -81,15 +83,26 @@ def login():
 def forgot_password():
     form = ForgotForm()
     if form.validate_on_submit():
-        send_email(str(form.email.data))
+        key = create_secret_key()
+        send_email(str(form.email.data), key)
+        db_sess = create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        print(user)
+        password = Password(key=key, user_id=user.id)
+        # password.user_id = user.users_id
+        db_sess2 = create_session()
+        db_sess2.add(password)
+        db_sess2.commit()
         return redirect('/')
     return render_template('forgot_email.html', form=form)
 
 
 @app.route('/forgot_password/<secret_key>')
 def func(secret_key):
-    param = {}
-    pass
+    db_sess = create_session()
+    user = db_sess.query(Password).filter(Password.key == secret_key).first()
+    print(user.user_id)
+    return render_template('recovery-password.html')
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -116,7 +129,7 @@ def register_obr():
             return render_template('register.html', title='Регистрация', form=form, message="Пароли не совпадают")
         elif not all(password_check):
             return render_template('register.html', title='Регистрация', form=form, message="Пароль слишком простой")
-        elif len(nickname) <= 4 or len(password1) <= 8:
+        elif len(password1) <= 8:
             return render_template('register.html', title='Регистрация', form=form, message="Пароль слишком короткий")
         else:
             session = create_session()
@@ -176,6 +189,7 @@ def profile_edit(id_user):
             print(form.name_surname.data, form.country_city.data, form.nickname.data, form.gender.data)
         else:
             abort(404)
+    print(form.validate_on_submit())
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         u = db_sess.query(User).filter(User.id == id_user).first()
@@ -191,14 +205,47 @@ def profile_edit(id_user):
             return redirect('/profile')
         else:
             abort(404)
-    return render_template('profile_edit.html', title=f'{u.nickname}', u=u, path=path, files_lst=files_lst, key=key)
+    return render_template('profile_edit.html', title=f'{u.nickname}', u=u, path=path, files_lst=files_lst, key=key,
+                           form=form)
 
 
-# @app.route('/recovery-password/<int:id_user>')
-# @login_required
-# def recovery_password(id_user):
-#     form = RecoveryPassword()
-#     if form.validate_on_submit():
+@app.route('/recovery-password/<int:id_user>')
+@login_required
+def recovery_password(id_user):
+    form = RecoveryPassword()
+    session2 = create_session()
+    files_lst = os.listdir(basedir)
+    key = f'{id_user}' + '.png'
+    u = session2.query(User).filter(User.id == id_user).first()
+    path = f'/static/img/profiles/{id_user}.png'
+    password_check = [re.search(r"[a-z]", str(form.password.data)), re.search(r"[A-Z]", str(form.password.data)),
+                      re.search(r"[0-9]", str(form.password.data))]
+    if form.validate_on_submit():
+        db_sess = create_session()
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        if user and user.check_password(form.old_password.data):
+            if form.password.data != form.password_again.data:
+                return render_template('recovery-password.html', title='Восстановление пароля', form=form,
+                                       message="Пароли не совпадают")
+            elif form.old_password.data == form.password.data:
+                return render_template('recovery-password.html', title='Восстановление пароля', form=form,
+                                       message="Новый пароль совпадает со старым")
+            elif not all(password_check):
+                return render_template('recovery-password.html', title='Восстановление пароля', form=form,
+                                       message="Пароль слишком простой")
+            elif len(form.password.data) <= 8:
+                return render_template('recovery-password.html', title='Восстановление пароля', form=form,
+                                       message="Пароль слишком короткий")
+            else:
+                session1 = create_session()
+                user = db_sess.query(User).filter(User.id == current_user.id).first()
+                user.hashed_password = form.password.data
+                session1.commit()
+                return render_template('recovery-password.html', title='Восстановление пароля', form=form,
+                                       message="Пароль был успешно изменён!")
+        return render_template('recovery-password.html', message="Неправильный пароль", form=form)
+    return render_template('recovery-password.html', title='Восстановление пароля', u=u, path=path, files_lst=files_lst,
+                           key=key, form=form)
 
 
 @app.route('/path', methods=["POST", "GET"])
@@ -219,5 +266,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run()
-
-

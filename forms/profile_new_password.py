@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 
 class RecoveryPassword(FlaskForm):
-    old_password = PasswordField('Старый пароль', validators=[DataRequired()])
-    password = PasswordField('Новый пароль', validators=[DataRequired()])
+    old_password = PasswordField('Введите старый пароль:', validators=[DataRequired()])
+    password = PasswordField('Введите новый пароль', validators=[DataRequired()])
     password_again = PasswordField('Подтверждение нового пароля', validators=[DataRequired()])
     submit = SubmitField('Обновить пароль')

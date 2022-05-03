@@ -48,11 +48,11 @@
                             <li class="active">
                                 <a href="#detail" data-toggle="tab" style="background-color: #9a0097;">О
                                     пользователе</a></li>
-                            <li class="edit-profile"><a href="{{ url_for('profile_edit', id_user=u.id) }}"
+                            <li class=""><a href="{{ url_for('profile_edit', id_user=u.id) }}"
                                                         style="color: #c72929">Редактирование</a>
                             </li>
-                            <li class="edit-profile"><a href="{{ url_for('profile_edit', id_user=u.id) }}"
-                                                        style="color: #c72929">Изменить пароль</a>
+                            <li class=""><a href="{{ url_for('recovery_password', id_user=u.id) }}"
+                                            style="color: #c72929">Изменить пароль</a>
                             </li>
                             <li class=""><a href="/" style="color: #c72929">Вернуться на главую страницу</a></li>
 

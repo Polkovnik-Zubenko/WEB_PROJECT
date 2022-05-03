@@ -6,7 +6,7 @@ from sqlalchemy_serializer import SerializerMixin
 from .db_session import SqlAlchemyBase
 
 
-class Password(SqlAlchemyBase, UserMixin):
+class Password(SqlAlchemyBase):
     __tablename__ = 'new_password'
 
     id_key = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
