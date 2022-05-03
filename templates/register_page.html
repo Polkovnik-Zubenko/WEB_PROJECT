@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    {% if otv%}
+        <p><a href="{{ url_for('logout')}}">Выйти из аккаунта</a></p>
+    {% endif %}
+    <a href="{{ url_for('login_page') }}">Авторизация</a>
+    <br>
+    <form action="/register-obr" method="POST">
+        <p><input type="text" name="name" placeholder="Введите ваше имя"></p>
+        <p><input type="text" name="surname" placeholder="Введите вашу фамиилию"></p>
+        <p><input type="text" name="email" placeholder="Введите адрес почты"></p>
+        <p><input type="text" name="nickname" placeholder="Введите имя пользователя"></p>
+        <p><input type="text" name="password1" placeholder="Введите пароль"></p>
+        <p><input type="text" name="password2" placeholder="Подтверждение пароля"></p>
+        <p><input type="submit" value="Зарегистрироваться"></p>
+    </form>
+</body>
+</html>
