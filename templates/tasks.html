@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/task.css">
     <title>Задачи</title>
 </head>
 <body>
     {% for i in t%}
-        <p><a href="#">•</a><a href="{{ url_for('task_page', id_task=i.id) }}">{{i.name}}</a></p>
+        <p><a class='href_tasks' href="#">• </a><a class='href_tasks1' href="{{ url_for('task_page', id_task=i.id) }}">{{i.name}}</a></p>
     {% endfor %}
 </body>
 </html>
