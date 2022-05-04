@@ -11,4 +11,4 @@ class Password(SqlAlchemyBase):
 
     id_key = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     key = sqlalchemy.Column(sqlalchemy.String, index=True, nullable=True)
-    user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
+    user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"), unique=True)

@@ -87,18 +87,29 @@ def forgot_password():
         send_email(str(form.email.data), key)
         db_sess = create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
-        print(user)
-        password = Password(key=key, user_id=user.id)
-        # password.user_id = user.users_id
-        db_sess2 = create_session()
-        db_sess2.add(password)
-        db_sess2.commit()
+        lst = ''
+        try:
+            lst = user.id
+        except Exception:
+            pass
+        if lst:
+            password = Password(key=key, user_id=user.id)
+            db_sess2 = create_session()
+            db_sess2.add(password)
+            db_sess2.commit()
+        else:
+            return render_template('forgot_email.html', form=form, message="Вы не зарегистрированы в системе")
+
+
+
+
+
         return redirect('/')
     return render_template('forgot_email.html', form=form)
 
 
 @app.route('/forgot_password/<secret_key>')
-def func(secret_key):
+def forgot_password2(secret_key):
     db_sess = create_session()
     user = db_sess.query(Password).filter(Password.key == secret_key).first()
     print(user.user_id)
