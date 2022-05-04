@@ -1,18 +1,22 @@
+import glob
 import os
 import re
 import datetime
+import subprocess
+
 import sqlalchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_serializer import SerializerMixin
 from files.db_session import create_session
 import bcrypt
-from flask import Flask, request, make_response, session, render_template, redirect, abort, redirect, url_for
+from flask import Flask, request, make_response, session, render_template, redirect, abort, redirect, url_for, flash
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 
 from files.db_session import SqlAlchemyBase
 from files.new_password import Password
+from files.tasks import Task
 from forms.login import LoginForm
 from forms.user import RegisterForm
 from files import db_session
@@ -34,7 +38,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=20)
 basedir = os.path.abspath(os.path.dirname('static/img/profiles/'))
-app.config['UPLOAD_FOLDER'] = basedir
+solutdir = os.path.abspath(os.path.dirname('static/solutions/'))
+app.config['UPLOAD_FOLDER'] = [basedir, solutdir]
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 
@@ -99,10 +104,6 @@ def forgot_password():
             db_sess2.commit()
         else:
             return render_template('forgot_email.html', form=form, message="Вы не зарегистрированы в системе")
-
-
-
-
 
         return redirect('/')
     return render_template('forgot_email.html', form=form)
@@ -171,7 +172,7 @@ def profile(id_user):
     files_lst = os.listdir(basedir)
     key = f'{id_user}' + '.png'
     u = session2.query(User).filter(User.id == id_user).first()
-    ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
+    ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'][0], f'{id_user}.png'))
     path = f'/static/img/profiles/{id_user}.png'
     if current_user.id == u.id:
         return render_template('profile.html', title=f'{u.nickname}', u=u, path=path, files_lst=files_lst, key=key)
@@ -187,7 +188,7 @@ def profile_edit(id_user):
     key = f'{id_user}' + '.png'
     db_sess = db_session.create_session()
     u = db_sess.query(User).filter(User.id == id_user).first()
-    ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], f'{id_user}.png'))
+    ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'][0], f'{id_user}.png'))
     path = f'../static/img/profiles/{id_user}.png'
     if request.method == "GET":
         db_sess = db_session.create_session()
@@ -261,11 +262,61 @@ def recovery_password(id_user):
 
 @app.route('/path', methods=["POST", "GET"])
 def upload_file():
-    param = {}
     if request.method == "POST":
-        file = request.files['file']
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], f'{current_user.id}.png'))
-        return redirect(url_for('profile_edit', id_user=current_user.id))
+        id = request.form['id']
+        if id == '0':
+            file = request.files['file']
+            file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][0]}", f'{current_user.id}.png'))
+            return redirect(url_for('profile', id_user=current_user.id))
+        else:
+            file = request.files['solut']
+            file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][1]}", 'solution.py'))
+
+            path_file = 'static/solutions/solution.py'
+            path = f'static/tests/{id}'
+            otv = 'OK'
+
+            for test in range(len(glob.glob(f'{path}/*')) // 2):
+                if len(str(test)) == 1:
+                    test = f'0{test + 1}'
+                else:
+                    test = f'{test + 1}'
+                with open(f"{path}/{test}") as input_:
+                    input_ = input_.readlines()
+                    input_ = [line.rstrip() for line in input_]
+                p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     encoding='utf-8',
+                                     stdin=subprocess.PIPE)  # запуск файла
+                for i in input_:  # передача данных в файл
+                    p.stdin.write(f'{i}\n')
+                with open(f'{path}/{test}.a') as output_:
+                    output_ = output_.readlines()
+                    output_ = [line.rstrip() for line in output_]
+                output_program, error = p.communicate()
+                if output_ == output_program.split('\n')[:-1]:
+                    pass
+                elif error:
+                    otv = f'Ошибка в тесте: {test}+{error}'
+                    break
+                else:
+                    otv = f'Ошибка в тесте: {test}'
+                    break
+            flash(otv)
+            return redirect(url_for('task_page', id_task=id))
+
+
+@app.route('/task/<int:id_task>')
+def task_page(id_task):
+    db_sess = create_session()
+    t = db_sess.query(Task).filter(Task.id == id_task).first()
+    return render_template('task_template.html', t=t)
+
+
+@app.route('/tasks')
+def tasks():
+    db_sess = create_session()
+    t = db_sess.query(Task).all()
+    return render_template('tasks.html', t=t)
 
 
 @app.route('/logout')

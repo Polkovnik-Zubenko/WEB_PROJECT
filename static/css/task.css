@@ -1,0 +1,72 @@
+.href_tasks, .href_tasks1 {
+    text-decoration: none;
+    color: #9a0097;
+    -webkit-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+}
+
+.href_tasks {
+    padding-left: 25px;
+}
+
+.href_tasks1:hover {
+    color: black;
+}
+
+h2 {
+    font-weight: normal;
+    text-align: center;
+}
+
+.text-of-task {
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+}
+
+table {
+    margin-top: 10x;
+    margin-bottom: 10px;
+}
+
+td, th {
+    padding-right: 30px;
+}
+
+.h2Div {
+    border-left: 2px solid #9a0097;
+    border-right: 2px solid #9a0097;
+    border-top: 2px solid #9a0097;
+    border-bottom: 1px solid #9a0097;
+}
+
+.textOfTask {
+    border-left: 2px solid #9a0097;
+    border-right: 2px solid #9a0097;
+    border-top: 1px solid #9a0097;
+    border-bottom: 1px solid #9a0097;
+}
+
+.tableCenter {
+    border-left: 2px solid #9a0097;
+    border-right: 2px solid #9a0097;
+    border-top: 1px solid #9a0097;
+    border-bottom: 2px solid #9a0097;
+}
+
+
+.inputFilePy {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: left;
+    padding-left: 50px;
+    width: 25%;
+}
+
+.verdictOUT {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: right;
+    padding-right: 50px;
+    width: 70%;
+}
