@@ -1,15 +1,19 @@
-.href_tasks, .href_tasks1 {
+.href_tasks, .href_tasks1, .href_tasks11 {
     text-decoration: none;
     color: #9a0097;
     -webkit-transition: all 0.5s ease;
           transition: all 0.5s ease;
 }
 
-.href_tasks {
+.href_tasks1 {
     padding-left: 25px;
 }
 
-.href_tasks1:hover {
+.href_tasks111 {
+    text-align: center;
+}
+
+.href_tasks1:hover, .href_tasks11:hover {
     color: black;
 }
 
@@ -69,4 +73,16 @@ td, th {
     float: right;
     padding-right: 50px;
     width: 70%;
+}
+
+.tasks_list {
+    padding-top: 15px;
+    float: left;
+}
+
+.create_test {
+    float: right;
+    width: 400px;
+    margin-top: 15px;
+    padding-right: 50px;
 }
