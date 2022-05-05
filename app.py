@@ -1,8 +1,10 @@
+from base64 import encode
 import glob
 import os
 import re
 import datetime
 import subprocess
+import random
 
 import sqlalchemy
 from flask_login import UserMixin
@@ -42,6 +44,8 @@ solutdir = os.path.abspath(os.path.dirname('static/solutions/'))
 app.config['UPLOAD_FOLDER'] = [basedir, solutdir]
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
+#  drimilya2018@gmail.com
+#  nolifecat12345_ZA
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -317,6 +321,66 @@ def tasks():
     db_sess = create_session()
     t = db_sess.query(Task).all()
     return render_template('tasks.html', t=t)
+
+
+@app.route('/create-test')
+@login_required
+def create_test():
+    db_sess = create_session()
+    t = db_sess.query(Task).all()
+    return render_template('create_test.html', t=t)
+
+
+@app.route('/create_test_for_user', methods=["POST"])
+def create_test_for_user():
+    flag = False
+    id_tests = request.form['tests']
+    db_sess = create_session()
+    id_tests = id_tests.split(', ')
+    for i in id_tests:
+        if db_sess.query(Task).filter(Task.id == i).first():
+            flag = True
+        else:
+            flag = False
+    if current_user.is_authenticated and flag:
+        id_user = current_user.id
+        path_to_test = f'/created-test-{id_user}/{random.randint(0, 10000000)}\n'
+        if os.path.exists(f'static/created_tests/created-test{id_user}.txt'):
+            f = open(f'static/created_tests/created-test{id_user}.txt', mode='a')
+            for i in id_tests:
+                print(i)
+                f.write(i + ',')
+            f.write(' ')
+            f.write(path_to_test)
+            f.close()
+        else:
+            f = open(f'static/created_tests/created-test{id_user}.txt', mode='w')
+            for i in id_tests:
+                print(i)
+                f.write(i + ',')
+            f.write(' ')
+            f.write(path_to_test)
+            f.close()
+    if flag:
+        flash(path_to_test)
+    else:
+        flash('Вы ввели задачи не так')
+    return redirect(url_for('create_test'))
+
+
+@app.route('/created-test-<int:id_teacher>/<int:id_test>')
+@login_required
+def created_test_teach(id_teacher, id_test):
+    if os.path.exists(f'static/created_tests/created-test{id_teacher}.txt'):
+        f = open(f'static/created_tests/created-test{id_teacher}.txt', mode='r')
+        f = [line.strip() for line in f]
+        for i in f:
+            tmp = i.split(' ')
+            if f'/created-test-{id_teacher}/{id_test}' in tmp:
+                zadachi = tmp[0].split(',')[:-1]
+        return render_template('created_test.html', title=id_test, zadachi=zadachi)
+    else:
+        return redirect(url_for('error_404'))
 
 
 @app.route('/logout')
