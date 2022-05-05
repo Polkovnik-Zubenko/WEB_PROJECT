@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/task.css">
+    <link rel="shortcut icon" href="/static/img/main_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <title>Создание теста</title>
+</head>
+<body>
+
+    <div class="tasks_list">
+        {% for i in t%}
+            <p><a class='href_tasks' href="#">{{i.id}}) </a><a class='href_tasks1' href="{{ url_for('task_page', id_task=i.id) }}">{{i.name}}</a></p>
+        {% endfor %}
+    </div>
+
+    <div class="create_test">
+        <form action="/create_test_for_user", method="POST">
+            <p><input type="text" class="form-control" placeholder="Введите номера задач(Например: 1, 2, 3)" name="tests"></p>
+            <p><button type="submit" class="btn btn-primary">Создать</button></p>
+        </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p>Сслыка на тест: {{message}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

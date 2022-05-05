@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/task.css">
+    <link rel="shortcut icon" href="/static/img/main_logo.png" type="image/png">
+    <title>Тест</title>
+</head>
+<body>
+    <div class="created-test">
+        <div class="h2Div2"><h2>Тест №{{title}}</h2></div>
+        {% for i in zadachi %}
+            <p class="href_tasks111"><a class='href_tasks11' href="{{ url_for('task_page', id_task=i) }}">Задача №{{i}}</a></p>
+        {% endfor %}
+    </div>
+</body>
+</html>
