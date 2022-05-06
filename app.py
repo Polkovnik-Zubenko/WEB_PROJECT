@@ -5,6 +5,8 @@ import re
 import datetime
 import subprocess
 import random
+from zipfile import ZipFile
+import shutil
 
 import sqlalchemy
 from flask_login import UserMixin
@@ -41,7 +43,8 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=20)
 basedir = os.path.abspath(os.path.dirname('static/img/profiles/'))
 solutdir = os.path.abspath(os.path.dirname('static/solutions/'))
-app.config['UPLOAD_FOLDER'] = [basedir, solutdir]
+newtaskdir = os.path.abspath(os.path.dirname('static/tmp_files/'))
+app.config['UPLOAD_FOLDER'] = [basedir, solutdir, newtaskdir]
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 #  drimilya2018@gmail.com
@@ -272,6 +275,47 @@ def upload_file():
             file = request.files['file']
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][0]}", f'{current_user.id}.png'))
             return redirect(url_for('profile', id_user=current_user.id))
+        elif id == 'zip':
+            file = request.files['file']
+            file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][2]}", f'{current_user.id}.zip'))
+
+            db_sess = create_session()
+            t = db_sess.query(Task).order_by(Task.id.desc()).first()
+
+            myzip = ZipFile(f'static/tmp_files/{current_user.id}.zip')
+            myzip.extractall(f'static/tmp_files/{current_user.id}')
+            myzip.close()
+
+            get_files = os.listdir(f'static/tmp_files/{current_user.id}/tests')
+            os.mkdir(f'static/tests/{t.id + 1}')
+            for g in get_files:
+                os.mkdir(f'static/tests/{t.id + 1}/{g}')
+                for file in os.listdir(f'static/tmp_files/{current_user.id}/tests/{g}'):
+                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/{t.id + 1}/{g}/' + file)
+
+            path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'static/tmp_files/{current_user.id}')
+            shutil.rmtree(path)
+            os.remove(f'static/tmp_files/{current_user.id}.zip')
+
+            name_task = request.form['name']
+            text_task = request.form['text-task']
+            input_data = request.files['input_data']
+            input_data.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][2]}", f'input-{current_user.id}.txt'))
+            output_data = request.files['output_data']
+            output_data.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][2]}", f'output-{current_user.id}.txt'))
+
+            input_data_str = create_data_for_task(f'static/tmp_files/input-{current_user.id}.txt')
+            output_data_str = create_data_for_task(f'static/tmp_files/output-{current_user.id}.txt')
+
+
+            task_new = Task(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str)
+            db_sess.add(task_new)
+            db_sess.commit()
+
+            os.remove(f'static/tmp_files/input-{current_user.id}.txt')
+            os.remove(f'static/tmp_files/output-{current_user.id}.txt')
+
+            return redirect('/')
         else:
             file = request.files['solut']
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][1]}", 'solution.py'))
@@ -308,6 +352,15 @@ def upload_file():
             flash(otv)
             return redirect(url_for('task_page', id_task=id))
 
+
+def create_data_for_task(name_file):
+    with open(name_file) as f:
+        str_mod = ''
+        f = f.readlines()
+        f = [line.rstrip() for line in f]
+        for i in f:
+            str_mod = str_mod + f'{i}<br>'
+    return str_mod
 
 @app.route('/task/<int:id_task>')
 def task_page(id_task):
@@ -381,6 +434,11 @@ def created_test_teach(id_teacher, id_test):
         return render_template('created_test.html', title=id_test, zadachi=zadachi)
     else:
         return redirect(url_for('error_404'))
+
+
+@app.route('/create-new-task')
+def create_new_task():
+    return render_template('create_new_task.html')
 
 
 @app.route('/logout')
