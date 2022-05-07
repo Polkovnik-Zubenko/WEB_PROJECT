@@ -28,9 +28,10 @@ import datetime
 from files.users import User
 from email_send import send_email
 from forms.forgot_password import ForgotForm
-from forms.profile_edit import Profile
+from forms.profile_edit import ProfileEdit
 from forms.profile_new_password import RecoveryPassword
 from email_send import create_secret_key
+from forms.recovery_password import RecoveryPassword2
 
 app = Flask(__name__)
 
@@ -47,8 +48,6 @@ newtaskdir = os.path.abspath(os.path.dirname('static/tmp_files/'))
 app.config['UPLOAD_FOLDER'] = [basedir, solutdir, newtaskdir]
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
-#  drimilya2018@gmail.com
-#  nolifecat12345_ZA
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -96,32 +95,60 @@ def forgot_password():
     form = ForgotForm()
     if form.validate_on_submit():
         key = create_secret_key()
-        send_email(str(form.email.data), key)
         db_sess = create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
-        lst = ''
-        try:
-            lst = user.id
-        except Exception:
-            pass
-        if lst:
-            password = Password(key=key, user_id=user.id)
-            db_sess2 = create_session()
-            db_sess2.add(password)
-            db_sess2.commit()
+        user = db_sess.query(User).filter(User.email == form.email.data).one_or_none()
+        if user:
+            password = db_sess.query(Password).filter(Password.user_id == user.id).one_or_none()
+            if password:
+                password.key = key
+            else:
+                password = Password(key=key, user_id=user.id)
+                db_sess.add(password)
+            db_sess.commit()
         else:
-            return render_template('forgot_email.html', form=form, message="Вы не зарегистрированы в системе")
+            return render_template('forgot_email.html', form=form, message="Данный email не зарегистрирован в системе")
+
+        send_email(str(form.email.data), key)
 
         return redirect('/')
     return render_template('forgot_email.html', form=form)
 
 
-@app.route('/forgot_password/<secret_key>')
+@app.route('/forgot_password/<secret_key>', methods=["GET", "POST"])
 def forgot_password2(secret_key):
+    form = RecoveryPassword2()
+    form2 = ForgotForm()
     db_sess = create_session()
-    user = db_sess.query(Password).filter(Password.key == secret_key).first()
-    print(user.user_id)
-    return render_template('recovery-password.html')
+    similar = db_sess.query(Password).filter(Password.key == secret_key).one_or_none()
+    if similar:
+        if form.validate_on_submit():
+            user_id = db_sess.query(Password.user_id).filter(Password.key == secret_key).first()
+            print(123, user_id)
+            user = db_sess.query(User).filter(User.id == user_id[0]).first()
+
+            password_check = [re.search(r"[a-z]", str(form.password.data)),
+                              re.search(r"[A-Z]", str(form.password.data)),
+                              re.search(r"[0-9]", str(form.password.data))]
+            if form.password.data != form.password_again.data:
+                return render_template('recovery-password2.html', title='Восстановление пароля', form=form,
+                                       message="Пароли не совпадают")
+            elif user.check_password(form.password.data):
+                return render_template('recovery-password2.html', title='Восстановление пароля', form=form,
+                                       message="Новый пароль совпадает со старым")
+            elif not all(password_check):
+                return render_template('recovery-password2.html', title='Восстановление пароля', form=form,
+                                       message="Пароль слишком простой")
+            elif len(form.password.data) <= 8:
+                return render_template('recovery-password2.html', title='Восстановление пароля', form=form,
+                                       message="Пароль слишком короткий")
+            else:
+                user.set_password(form.password.data)
+                db_sess.commit()
+                return redirect('/')
+        return render_template('recovery-password2.html', form=form)
+    else:
+        return render_template('forgot_email.html', form=form2,
+                               message="Данная ссылка недействительна. Запросите восстановление пароля ещё раз.")
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -187,18 +214,18 @@ def profile(id_user):
         return redirect(url_for('register_page'))
 
 
-@app.route('/profile-edit/<int:id_user>')
+@app.route('/profile-edit/<int:id_user>', methods=["GET", "POST"])
 @login_required
 def profile_edit(id_user):
-    form = Profile()
+    form = ProfileEdit()
     files_lst = os.listdir(basedir)
     key = f'{id_user}' + '.png'
-    db_sess = db_session.create_session()
+    db_sess = create_session()
     u = db_sess.query(User).filter(User.id == id_user).first()
     ava = os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'][0], f'{id_user}.png'))
     path = f'../static/img/profiles/{id_user}.png'
     if request.method == "GET":
-        db_sess = db_session.create_session()
+        db_sess = create_session()
         u = db_sess.query(User).filter(User.id == id_user).first()
         if u:
             form.name_surname.data = f'{u.name} {u.surname}'
@@ -210,6 +237,7 @@ def profile_edit(id_user):
             abort(404)
     print(form.validate_on_submit())
     if form.validate_on_submit():
+        print(form.name_surname.data, form.country_city.data, form.nickname.data, form.gender.data, '__________')
         db_sess = db_session.create_session()
         u = db_sess.query(User).filter(User.id == id_user).first()
         if u:
@@ -228,7 +256,7 @@ def profile_edit(id_user):
                            form=form)
 
 
-@app.route('/recovery-password/<int:id_user>')
+@app.route('/recovery-password/<int:id_user>', methods=["GET", "POST"])
 @login_required
 def recovery_password(id_user):
     form = RecoveryPassword()
@@ -239,10 +267,11 @@ def recovery_password(id_user):
     path = f'/static/img/profiles/{id_user}.png'
     password_check = [re.search(r"[a-z]", str(form.password.data)), re.search(r"[A-Z]", str(form.password.data)),
                       re.search(r"[0-9]", str(form.password.data))]
+    print(form.validate_on_submit())
     if form.validate_on_submit():
         db_sess = create_session()
         user = db_sess.query(User).filter(User.id == current_user.id).first()
-        if user and user.check_password(form.old_password.data):
+        if user:
             if form.password.data != form.password_again.data:
                 return render_template('recovery-password.html', title='Восстановление пароля', form=form,
                                        message="Пароли не совпадают")
@@ -256,12 +285,12 @@ def recovery_password(id_user):
                 return render_template('recovery-password.html', title='Восстановление пароля', form=form,
                                        message="Пароль слишком короткий")
             else:
-                session1 = create_session()
                 user = db_sess.query(User).filter(User.id == current_user.id).first()
-                user.hashed_password = form.password.data
-                session1.commit()
-                return render_template('recovery-password.html', title='Восстановление пароля', form=form,
-                                       message="Пароль был успешно изменён!")
+                user.set_password(form.password.data)
+                db_sess.commit()
+                return redirect('/')
+                # return render_template('recovery-password.html', title='Восстановление пароля', form=form,
+                #                        message="Пароль был успешно изменён!")
         return render_template('recovery-password.html', message="Неправильный пароль", form=form)
     return render_template('recovery-password.html', title='Восстановление пароля', u=u, path=path, files_lst=files_lst,
                            key=key, form=form)
@@ -361,6 +390,7 @@ def create_data_for_task(name_file):
         for i in f:
             str_mod = str_mod + f'{i}<br>'
     return str_mod
+
 
 @app.route('/task/<int:id_task>')
 def task_page(id_task):

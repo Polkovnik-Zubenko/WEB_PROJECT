@@ -32,27 +32,6 @@
                             {% else %}
                                 <img class='photo' src="/static/img/default_photo.jpg">
                             {% endif %}
-                            <h3>
-                                <tr>
-                                    <td class="active"></td>
-                                    <td>{{ form.name_surname(class="form-control", placeholder="Имя и фамилия пользователя") }}<br>
-                                        {% for error in form.name_surname.errors %}
-                                            <div class="alert alert-danger" role="alert">
-                                                {{ error }}
-                                            </div>
-                                        {% endfor %}</td>
-                                </tr>
-                            </h3>
-                            <medium class="label">
-                                <tr>
-                                    <td>{{ form.country_city(class="form-control", placeholder="Страна и город пользователя") }}<br>
-                                        {% for error in form.country_city.errors %}
-                                            <div class="alert alert-danger" role="alert">
-                                                {{ error }}
-                                            </div>
-                                        {% endfor %}</td>
-                            </medium>
-                            <p></p>
                             <form class="formochka" action="/path" method="post" enctype="multipart/form-data">
                                 <p><input type="file" name="file"></p>
                                 <p><input type="submit" value="Загрузить"></p>
@@ -70,7 +49,7 @@
                             <li class="active"><a href="#detail" data-toggle="tab" style="background-color: #9a0097;">Редактирование</a>
                             </li>
                             <li class=""><a href="{{ url_for('recovery_password', id_user=u.id) }}"
-                                                        style="color: #c72929">Изменить пароль</a>
+                                            style="color: #c72929">Изменить пароль</a>
                             </li>
                             <li class=""><a href="/" style="color: #c72929">Вернуться на главую страницу</a></li>
                         </ul>
@@ -80,88 +59,110 @@
                                 <h4>Данные пользователя</h4>
                                 <table class="table table-th-block">
                                     <tbody>
-                                    <form action="/edit-profile" method="POST"></form>
-                                    <div>
-                                        {{ form.csrf_token }}
-                                    </div>
-                                    <tr>
-                                        <td> {{ form.nickname.label }} </td>
-                                        <td>{{ form.nickname(class="form-control") }}<br>
-                                            {% for error in form.nickname.errors %}
-                                                <div class="alert alert-danger" role="alert">
-                                                    {{ error }}
-                                                </div>
-                                            {% endfor %}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="active"><b>Email адрес:</b></td>
-                                        <td>{{ u.email }}</td>
-                                    </tr>
-                                    {% if u.gender == "man" %}
+                                    <form action="" method="POST">
+                                        <div>
+                                            {{ form.csrf_token }}
+                                        </div>
                                         <tr>
-                                            <td> {{ form.gender.label }} </td>
-                                            <td>{{ form.gender(class="form-control", value="Мужской") }}<br>
-                                                {% for error in form.gender.errors %}
-                                                    <div class="alert alert-danger" role="alert">
-                                                        {{ error }}
-                                                    </div>
-                                                {% endfor %}</td>
-                                        </tr>
-                                    {% else %}
-                                        <tr>
-                                            <td> {{ form.gender.label }} </td>
-                                            <td>{{ form.gender(class="form-control", value="Женский") }}<br>
-                                                {% for error in form.gender.errors %}
-                                                    <div class="alert alert-danger" role="alert">
-                                                        {{ error }}
-                                                    </div>
-                                                {% endfor %}</td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if u.type_user == 'student' %}
-                                        <tr>
-                                            <td class="active"><b>Тип записи:</b>
-                                            <td>Ученик</td>
-                                        </tr>
-                                    {% else %}
-                                        <tr>
-                                            <td class="active"><b>Тип записи:</b>
-                                            <td>Преподаватель</td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if u.type_user == 'student' %}
-                                        <tr>
-                                            <td> {{ form.school.label }} </td>
-                                            <td>{{ form.school(class="form-control") }}<br>
-                                                {% for error in form.school.errors %}
+                                            <td>{{ form.name_surname.label }}</td>
+                                            <td>{{ form.name_surname(class="form-control") }}<br>
+                                                {% for error in form.name_surname.errors %}
                                                     <div class="alert alert-danger" role="alert">
                                                         {{ error }}
                                                     </div>
                                                 {% endfor %}</td>
                                         </tr>
                                         <tr>
-                                            <td> {{ form.school_class.label }} </td>
-                                            <td>{{ form.school_class(class="form-control") }}<br>
-                                                {% for error in form.school_class.errors %}
+                                            <td>{{ form.country_city.label }}</td>
+                                            <td>{{ form.country_city(class="form-control", placeholder="Страна и город пользователя") }}<br>
+                                                {% for error in form.country_city.errors %}
                                                     <div class="alert alert-danger" role="alert">
                                                         {{ error }}
                                                     </div>
                                                 {% endfor %}</td>
                                         </tr>
                                         <tr>
-                                            <td> {{ form.year_finish_school.label }} </td>
-                                            <td>{{ form.year_finish_school(class="form-control") }}<br>
-                                                {% for error in form.year_finish_school.errors %}
+                                            <td> {{ form.nickname.label }} </td>
+                                            <td>{{ form.nickname(class="form-control") }}<br>
+                                                {% for error in form.nickname.errors %}
                                                     <div class="alert alert-danger" role="alert">
                                                         {{ error }}
                                                     </div>
                                                 {% endfor %}</td>
                                         </tr>
-                                    {% endif %}
-                                    <tr>
-                                        <td></td>
-                                        <td>{{ form.submit(type="submit", class="btn btn-primary", style="background-color: #9a0097; color: whitesmoke; border: black" ) }}</td>
-                                    </tr>
+                                        <tr>
+                                            <td class="active" style="background-color: white"><b>Email адрес:</b></td>
+                                            <td>{{ u.email }}</td>
+                                        </tr>
+                                        {% if u.gender == "man" %}
+                                            <tr>
+                                                <td> {{ form.gender.label }} </td>
+                                                <td>{{ form.gender(class="form-control", value="Мужской") }}<br>
+                                                    {% for error in form.gender.errors %}
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td> {{ form.gender.label }} </td>
+                                                <td>{{ form.gender(class="form-control", value="Женский") }}<br>
+                                                    {% for error in form.gender.errors %}
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if u.type_user == 'student' %}
+                                            <tr>
+                                                <td class="active"><b>Тип записи:</b>
+                                                <td>Ученик</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td class="active" style="background-color: white"><b>Тип записи:</b>
+                                                <td>Преподаватель</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if u.type_user == 'student' %}
+                                            <tr>
+                                                <td> {{ form.school.label }} </td>
+                                                <td>{{ form.school(class="form-control") }}<br>
+                                                    {% for error in form.school.errors %}
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}</td>
+                                            </tr>
+                                            <tr>
+                                                <td> {{ form.school_class.label }} </td>
+                                                <td>{{ form.school_class(class="form-control") }}<br>
+                                                    {% for error in form.school_class.errors %}
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}</td>
+                                            </tr>
+                                            <tr>
+                                                <td> {{ form.year_finish_school.label }} </td>
+                                                <td>{{ form.year_finish_school(class="form-control") }}<br>
+                                                    {% for error in form.year_finish_school.errors %}
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}</td>
+                                            </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <div class="" style="display: flex; justify-content: center">
+                                                <td colspan="2"
+                                                    class="btn-sub" style="text-align: center">{{ form.submit(type="submit", class="btn btn-primary", style="background-color: #9a0097; color: whitesmoke; border: black" ) }}</td>
+                                                <div>{{ message }}</div>
+                                            </div>
+
+                                        </tr>
                                     </form>
                                     </tbody>
                                 </table>
