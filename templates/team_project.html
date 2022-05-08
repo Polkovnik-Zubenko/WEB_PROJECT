@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <script src="https://bootstraptema.ru/plugins/jquery/jquery-1.11.3.min.js"></script>
+    <script src="https://bootstraptema.ru/plugins/2015/b-v3-3-6/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../static/css/team_style.css">
+    <link rel="shortcut icon" href=""/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="moodle, Association of Olympiad Programmers"/>
+    <link rel="shortcut icon" href="/static/img/main_logo.png" type="image/png">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://informatics.msk.ru/theme/styles.php/boost/1640770659_1/all"/>
+    <title>О команде</title>
+</head>
+<body>
+<nav class="fixed-top navbar navbar-light bg-white navbar-expand moodle-has-zindex"
+     aria-label="Навигация по сайту">
+
+    <div data-region="drawer-toggle" class="d-inline-block mr-3">
+        <a href="/" class="logo">
+            <img class="imglogo" style="margin-top: -10px" src="/static/img/main_logo.png" alt="Иконка">
+        </a>
+    </div>
+    <ul class="navbar-nav d-none d-md-flex">
+        <!-- custom_menu -->
+        <li class="nav-item">
+            <a class="nav-item nav-link" href="">Ваша реклама на нашем сайте</a>
+        </li>
+        <!-- page_heading_menu -->
+
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="d-none d-lg-block">
+
+        </li>
+        <!-- navbar_plugin_output -->
+        <li class="nav-item">
+
+        </li>
+        <!-- user_menu -->
+        <li class="nav-item d-flex align-items-center">
+            {% if current_user.is_authenticated %}
+                <div class="nav-item d-flex align-items-center" id="yui_3_17_2_1_1650453415800_42">
+                    <div class="usermenu" id="yui_3_17_2_1_1650453415800_41">
+                        <div class="action-menu moodle-actionmenu nowrap-items d-inline" id="action-menu-1"
+                             data-enhance="moodle-core-actionmenu">
+                            <div class="menubar d-flex " id="action-menu-1-menubar" role="menubar">
+                                <div class="action-menu-trigger" id="yui_3_17_2_1_1650453415800_40">
+                                    <div class="dropdown show" id="yui_3_17_2_1_1650453415800_39">
+                                        <div onmouseover="show()" onmouseleave="hide()">
+                                            <div>
+                                                <button>
+                                                    <a href="#" tabindex="0"
+                                                       class="d-inline-block icon-no-margin"
+                                                       id="action-menu-toggle-1" aria-label="Меню пользователя"
+                                                       role="button" aria-haspopup="true"
+                                                       aria-expanded="true" aria-controls="action-menu-1-menu">
+                                                                <span class="userbutton"
+                                                                      id="yui_3_17_2_1_1650453415800_38"><span
+                                                                        class="usertext mr-1"
+                                                                        id="yui_3_17_2_1_1650453415800_37">{{ current_user.name }} {{ current_user.surname }}</span><span
+                                                                        class="avatars"><span
+                                                                        class="avatar current">
+                                                                      {% if key in files_lst %}
+                                                                          <img src="{{ path }}" class="userpicture"
+                                                                               width="35"
+                                                                               height="35"
+                                                                               aria-hidden="true">
+                                                                      {% else %}
+                                                                          <img src="/static/img/default_photo.jpg"
+                                                                               class="userpicture" width="35"
+                                                                               height="35"
+                                                                               aria-hidden="true">
+                                                                      {% endif %}
+                                                                            </span></span></span>
+                                                        <b class="caret"></b>
+                                                    </a>
+                                                </button>
+                                            </div>
+                                            <div id="hidden-div" style="display: none">
+                                                <div class="dropdown-menu dropdown-menu-right menu align-tr-br show"
+                                                     id="action-menu-1-menu" data-rel="menu-content"
+                                                     aria-labelledby="action-menu-toggle-1" role="menu"
+                                                     data-align="tr-br">
+                                                    <a href="{{ url_for('login') }}"
+                                                       class="dropdown-item menu-action" role="menuitem"
+                                                       data-title="mymoodle,admin"
+                                                       aria-labelledby="actionmenuaction-1">
+                                                        <i class="icon fa fa-user fa-fw "
+                                                           aria-hidden="true"></i>
+                                                        <span class="menu-action-text" id="actionmenuaction-1">
+                                                            Личный кабинет
+                                                        </span>
+                                                    </a>
+                                                    <div class="dropdown-divider" role="presentation"><span
+                                                            class="filler">&nbsp</span></div>
+                                                    <a href="#"
+                                                       class="dropdown-item menu-action" role="menuitem"
+                                                       data-title="profile,moodle"
+                                                       aria-labelledby="actionmenuaction-2">
+                                                        <i class="icon fa fa-bar-chart fa-fw"
+                                                           aria-hidden="true"></i>
+                                                        <span class="menu-action-text" id="actionmenuaction-2">
+                                                            Статистика
+                                                        </span>
+                                                    </a>
+                                                    <div class="dropdown-divider" role="presentation"><span
+                                                            class="filler">&nbsp;</span></div>
+                                                    <a href="/logout"
+                                                       class="dropdown-item menu-action" role="menuitem"
+                                                       data-title="logout,moodle"
+                                                       aria-labelledby="actionmenuaction-6">
+                                                        <i class="icon fa fa-sign-out fa-fw "
+                                                           aria-hidden="true"></i>
+                                                        <span class="menu-action-text" id="actionmenuaction-3">
+                                                            Выход
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>
+                    <a class=" btn btn-success login_button_style"  href="/login"
+                       style="margin-top: 13px; background-color: #9a0097; color: whitesmoke; font-size: 0.9375rem">Войти</a>
+                    <a class=" btn btn-primary register_button_style" href="{{ url_for('register_obr') }}"
+                       style="margin-top: 13px; background-color: #9a0097; color: whitesmoke; font-size: 0.9375rem">Зарегистрироваться</a>
+                </p>
+            {% endif %}
+        </li>
+    </ul>
+    <!-- search_box -->
+</nav>
+<div id="page-content" class="row pb-3 d-print-block" style="margin-top: 40px; text-align: center">
+    <div id="region-main-box" class="col-12">
+        <section id="region-main" aria-label="Содержимое">
+            <span class="notifications" id="user-notifications"></span>
+            <div role="main"><span id="maincontent"></span>
+                <div class="box py-3 generalbox center clearfix">
+                    <div class="no-overflow">&nbsp;
+                        <table cellspacing="20" cellpadding="2" width="100%" align="left" border="0">
+                            <tbody>
+                            <tr>
+                                <td valign="top" width="20%"><strong>Александр Харченко</strong></td>
+                                <td valign="top" width="80%">
+                                    <p><strong>программист, редактор и дизайнер сайта<br></strong>ученик МАОУ Лицей №29
+                                        города Тамбова</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" width="20%"><strong>Илья Сергеев</strong>
+                                </td>
+                                <td valign="top" width="80%">
+                                    <p><strong>программист, редактор и дизайнер сайта<br></strong>ученик МАОУ СОШ №1
+                                        города Тамбова</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top" width="20%"><strong>Сергей Акопян</strong>
+                                </td>
+                                <td valign="top" width="80%"><strong>преподаватель информатики МАОУ СОШ №1,
+                                    преподаватель Лицея Академии Яндекс<br></strong>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modified">Последнее изменение: Воскресенье, 8 Мая 2022, 11:03</div>
+            </div>
+            <div class="" style="text-align: center; margin-top: 8px"><a href="/" class="btn btn-primary btn-position"
+                                                        style="background-color: #9a0097; color: whitesmoke">Главная
+                страница</a></div>
+            </li>
+
+        </section>
+    </div>
+</div>
+<script>
+    function show() {
+        document.getElementById("hidden-div").style.display = '';
+    }
+    function hide() {
+        document.getElementById("hidden-div").style.display = 'none';
+    }
+  </script>
+</body>
+</html>

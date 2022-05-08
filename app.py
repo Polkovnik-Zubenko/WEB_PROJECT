@@ -296,6 +296,17 @@ def recovery_password(id_user):
                            key=key, form=form)
 
 
+@app.route('/about_team', methods=["POST", "GET"])
+def about_team():
+    if current_user.is_authenticated:
+        files_lst = os.listdir(basedir)
+        key = f'{current_user.id}' + '.png'
+        path = f'/static/img/profiles/{current_user.id}.png'
+        return render_template('team_project.html', path=path, files_lst=files_lst, key=key)
+    else:
+        return render_template('team_project.html')
+
+
 @app.route('/path', methods=["POST", "GET"])
 def upload_file():
     if request.method == "POST":
