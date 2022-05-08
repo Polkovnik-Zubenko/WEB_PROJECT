@@ -33,6 +33,9 @@ from forms.profile_new_password import RecoveryPassword
 from email_send import create_secret_key
 from forms.recovery_password import RecoveryPassword2
 from forms.number_task import NumberTask
+from forms.create_test import CreateTest
+from forms.create_collection import CreateCollection
+from files.users_collections import Collections
 
 app = Flask(__name__)
 
@@ -58,11 +61,12 @@ def load_user(user_id):
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    form = NumberTask(csv=False)
+    form = NumberTask()
+    db_sess = create_session()
+    collection = db_sess.query(Collections).all()
+    for item in collection:
+        print(item.title)
     param = {}
-    print(form.validate_on_submit())
-    if form.validate_on_submit():
-        return task_page(form.number.data)
     if current_user.is_authenticated:
         files_lst = os.listdir(basedir)
         key = f'{current_user.id}' + '.png'
@@ -70,8 +74,40 @@ def index():
         param['files_lst'] = files_lst
         param['key'] = key
         param['path'] = path
-        return render_template('index.html', form=form, **param)
-    return render_template('index.html', form=form, **param)
+    if form.validate_on_submit():
+        task = db_sess.query(Task).filter(Task.id == form.number.data).one_or_none()
+        if task:
+            return task_page(form.number.data)
+        else:
+            return render_template('index.html', message="Данная задача отсутствует в библиотеке", form=form,
+                                   collection=collection, **param)
+
+    return render_template('index.html', form=form, collection=collection, **param)
+
+
+@app.route('/create_collection', methods=["GET", "POST"])
+def create_collection():
+    form = CreateCollection()
+    if form.validate_on_submit():
+        db_sess = create_session()
+        collection = db_sess.query(Collections).filter(
+            Collections.title == f'{current_user.name} {current_user.surname} {form.title.data}').one_or_none()
+        if collection:
+            return render_template('create_collection.html', form=form,
+                                   message="Сборник с таким названием уже существует")
+        else:
+            new_collection = Collections(title=f'{current_user.name} {current_user.surname} {form.title.data}',
+                                         href_link=f'/collection/{current_user.surname}_{form.title.data}')
+            db_sess.add(new_collection)
+            db_sess.commit()
+            return redirect('/')
+
+    return render_template('create_collection.html', form=form)
+
+
+@app.route('/collection/<name_user>')
+def collection(name_user):
+    return re
 
 
 @app.errorhandler(404)

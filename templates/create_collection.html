@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/forgot_password.css">
+    <link rel="shortcut icon" href="/static/img/main_logo.png" type="image/png">
+    <title>Создание сборника задач</title>
+</head>
+<body>
+<div class="row extra-row">
+    <div class="large-left col-sm-12">
+        <div class="row">
+            <div id="center_column" class="center_column col-xs-12 col-sm-12 accordionBox">
+                <div class="box">
+                    <h1 class="page-heading" style="text-align: center">Создание сборника задач</h1>
+                    <h2 class="page-heading2" style="text-align: center">Пожалуйста введите название вашего нового
+                        сборника. Название не должно включать в себя пробелы.</h2>
+                    <form action="" method="post" class="std" id="">
+                        <div>
+                            {{ form.csrf_token }}
+                        </div>
+                        <div class="form-group" style="text-align: center">
+                            {{ form.title(class="form-control text-email", type="str", placeholder="Название сборника") }}<br>
+                        </div>
+                        <div class="lst" style="text-align: center">{{ message }}</div>
+                        <p class="submit btn-sub">
+                            <button type="submit" class="btn btn-default btn-md icon-right btn1">
+                                <span>Создать сборник</span>
+                            </button>
+                        </p>
+                    </form>
+                </div>
+                <p>
+                    <a class="btn btn-default btn-sm icon-left" href="/" title="Назад к форме &quot;Вход&quot;"
+                       rel="nofollow">
+      <span>
+        Назад к центральному меню
+      </span>
+                    </a>
+                </p>
+            </div><!-- #center_column -->
+        </div><!--.large-left-->
+    </div><!--.row-->
+</div>
+
+</body>
+</html>
