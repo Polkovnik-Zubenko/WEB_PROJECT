@@ -26,6 +26,7 @@ from forms.user import RegisterForm
 from files import db_session
 import datetime
 from files.users import User
+from files.task_t import Task_t
 from email_send import send_email
 from forms.forgot_password import ForgotForm
 from forms.profile_edit import ProfileEdit
@@ -320,18 +321,18 @@ def upload_file():
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][2]}", f'{current_user.id}.zip'))
 
             db_sess = create_session()
-            t = db_sess.query(Task).order_by(Task.id.desc()).first()
+            t = db_sess.query(Task_t).order_by(Task_t.id.desc()).first()
 
             myzip = ZipFile(f'static/tmp_files/{current_user.id}.zip')
             myzip.extractall(f'static/tmp_files/{current_user.id}')
             myzip.close()
 
             get_files = os.listdir(f'static/tmp_files/{current_user.id}/tests')
-            os.mkdir(f'static/tests/{t.id + 1}')
+            os.mkdir(f'static/tests/teachers/{t.id + 1}')
             for g in get_files:
-                os.mkdir(f'static/tests/{t.id + 1}/{g}')
+                os.mkdir(f'static/tests/teachers/{t.id + 1}/{g}')
                 for file in os.listdir(f'static/tmp_files/{current_user.id}/tests/{g}'):
-                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/{t.id + 1}/{g}/' + file)
+                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/teachers/{t.id + 1}/{g}/' + file)
 
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'static/tmp_files/{current_user.id}')
             shutil.rmtree(path)
@@ -348,7 +349,7 @@ def upload_file():
             output_data_str = create_data_for_task(f'static/tmp_files/output-{current_user.id}.txt')
 
 
-            task_new = Task(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str)
+            task_new = Task_t(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str)
             db_sess.add(task_new)
             db_sess.commit()
 
@@ -410,11 +411,19 @@ def task_page(id_task):
     return render_template('task_template.html', t=t)
 
 
+@app.route('/task_t/<int:id_task>')
+def task_page_t(id_task):
+    db_sess = create_session()
+    t = db_sess.query(Task_t).filter(Task_t.id == id_task).first()
+    return render_template('task_template.html', t=t)
+
+
 @app.route('/tasks')
 def tasks():
     db_sess = create_session()
     t = db_sess.query(Task).all()
-    return render_template('tasks.html', t=t)
+    t_t = db_sess.query(Task_t).all()
+    return render_template('tasks.html', t=t, t_t=t_t)
 
 
 @app.route('/create-test')
