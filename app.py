@@ -20,6 +20,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from files.db_session import SqlAlchemyBase
 from files.new_password import Password
+from files.task_t import Task_t
 from files.tasks import Task
 from forms.login import LoginForm
 from forms.user import RegisterForm
@@ -96,18 +97,22 @@ def create_collection():
             return render_template('create_collection.html', form=form,
                                    message="Сборник с таким названием уже существует")
         else:
-            new_collection = Collections(title=f'{current_user.name} {current_user.surname} {form.title.data}',
-                                         href_link=f'/collection/{current_user.surname}_{form.title.data}')
-            db_sess.add(new_collection)
-            db_sess.commit()
-            return redirect('/')
+            if ' ' in list(str(form.title.data.isspace)):
+                return render_template('create_collection.html', form=form,
+                                       message="В названии сборника присутствует пробел")
+            else:
+                new_collection = Collections(title=f'{current_user.name} {current_user.surname} {form.title.data}',
+                                             href_link=f'/collection/{current_user.surname}_{form.title.data}')
+                db_sess.add(new_collection)
+                db_sess.commit()
+                return redirect('/')
 
     return render_template('create_collection.html', form=form)
 
 
 @app.route('/collection/<name_user>')
 def collection(name_user):
-    return re
+    return render_template('create_new_task.html')
 
 
 @app.errorhandler(404)
@@ -361,19 +366,18 @@ def upload_file():
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][2]}", f'{current_user.id}.zip'))
 
             db_sess = create_session()
-            t = db_sess.query(Task).order_by(Task.id.desc()).first()
+            t = db_sess.query(Task_t).order_by(Task_t.id.desc()).first()
 
             myzip = ZipFile(f'static/tmp_files/{current_user.id}.zip')
             myzip.extractall(f'static/tmp_files/{current_user.id}')
             myzip.close()
 
             get_files = os.listdir(f'static/tmp_files/{current_user.id}/tests')
-            os.mkdir(f'static/tests/{t.id + 1}')
+            os.mkdir(f'static/tests/teachers/{t.id + 1}')
             for g in get_files:
-                os.mkdir(f'static/tests/{t.id + 1}/{g}')
+                os.mkdir(f'static/tests/teachers/{t.id + 1}/{g}')
                 for file in os.listdir(f'static/tmp_files/{current_user.id}/tests/{g}'):
-                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file,
-                               f'static/tests/{t.id + 1}/{g}/' + file)
+                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/teachers/{t.id + 1}/{g}/' + file)
 
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'static/tmp_files/{current_user.id}')
             shutil.rmtree(path)
@@ -389,7 +393,8 @@ def upload_file():
             input_data_str = create_data_for_task(f'static/tmp_files/input-{current_user.id}.txt')
             output_data_str = create_data_for_task(f'static/tmp_files/output-{current_user.id}.txt')
 
-            task_new = Task(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str)
+
+            task_new = Task_t(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str)
             db_sess.add(task_new)
             db_sess.commit()
 
@@ -455,7 +460,8 @@ def task_page(id_task):
 def tasks():
     db_sess = create_session()
     t = db_sess.query(Task).all()
-    return render_template('tasks.html', t=t)
+    t_t = db_sess.query(Task_t).all()
+    return render_template('tasks.html', t=t, t_t=t_t)
 
 
 @app.route('/create-test')
