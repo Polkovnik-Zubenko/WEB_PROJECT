@@ -11,24 +11,29 @@
 </head>
 <body>
 
-    <div class="tasks_list">
-        {% for i in t%}
-            <p><a class='href_tasks' href="#">{{i.id}}) </a><a class='href_tasks1' href="{{ url_for('task_page', id_task=i.id) }}">{{i.name}}</a></p>
-        {% endfor %}
-    </div>
+<div class="tasks_list">
+    {% for i in t %}
+        <p><a class='href_tasks' href="#">{{ i.id }}) </a><a class='href_tasks1'
+                                                             href="{{ url_for('task_page', id_task=i.id) }}">{{ i.name }}</a>
+        </p>
+    {% endfor %}
+</div>
 
-    <div class="create_test">
-        <form action="/create_test_for_user", method="POST">
-            <p><input type="text" class="form-control" placeholder="Введите номера задач(Например: 1, 2, 3)" name="tests"></p>
-            <p><button type="submit" class="btn btn-primary">Создать</button></p>
-        </form>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <p>Сслыка на тест: {{message}}</p>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
+<div class="create_test">
+    <form action="/create_tesht_for_user" , metod="POST">
+        <p><input type="text" class="form-control" placeholder="Введите номера задач(Например: 1, 2, 3)" name="tests">
+        </p>
+        <p>
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </p>
+    </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>Сслыка на тест: {{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
 </body>
 </html>

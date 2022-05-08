@@ -11,8 +11,8 @@
 
             <div data-region="drawer-toggle" class="d-inline-block mr-3">
                 <a href="/" class="logo">
-				    <img class="imglogo" style="margin-top: -10px" src="/static/img/main_logo.png" alt="Иконка">
-			    </a>
+                    <img class="imglogo" style="margin-top: -10px" src="/static/img/main_logo.png" alt="Иконка">
+                </a>
             </div>
             <ul class="navbar-nav d-none d-md-flex">
                 <!-- custom_menu -->
@@ -166,7 +166,8 @@
                                         <div class="page-header-headings">
                                             <figure class="sign" style="text-align: center">
                                                 <h1 class="h1" style="color: #9a0097;">AOP</h1>
-                                                <figcaption style="color: black; font-size: 23px">Association of Olympiad
+                                                <figcaption style="color: black; font-size: 23px">Association of
+                                                    Olympiad
                                                     Programmers
                                                 </figcaption>
                                             </figure>
@@ -2332,10 +2333,19 @@
 
 
                                     <div class="card-text content mt-3">
-                                        <form class="loginform" id="login" method="get"
-                                              action="https://informatics.msk.ru/mod/statements/view.php"><input
-                                                type="text" name="chapterid" id="chapterid" value="" size=10/><input
-                                                type="submit" value="Перейти"/></form>
+                                        <form class="loginform" id="login" method="POST">
+                                            <div>
+                                                {{ form.csrf_token }}
+                                            </div>
+                                            {{ form.number(class="form-control", placeholder="Введите № задачи",
+                                            type="text", id="chapterid", size=10) }}<br>
+                                            {% for error in form.number.errors %}
+                                                <div class="alert alert-danger" role="alert">
+                                                    {{ error }}
+                                                </div>
+                                            {% endfor %}
+                                            {{ form.submit(type="submit", class="btn btn-primary", value="Перейти", style="background-color: #9a0097; color: whitesmoke; border: black" ) }}
+                                        </form>
 
                                         <div class="footer"></div>
 

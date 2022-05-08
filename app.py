@@ -32,6 +32,7 @@ from forms.profile_edit import ProfileEdit
 from forms.profile_new_password import RecoveryPassword
 from email_send import create_secret_key
 from forms.recovery_password import RecoveryPassword2
+from forms.number_task import NumberTask
 
 app = Flask(__name__)
 
@@ -55,9 +56,13 @@ def load_user(user_id):
     return session.query(User).filter(User.id == user_id).one_or_none()
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def index():
+    form = NumberTask(csv=False)
     param = {}
+    print(form.validate_on_submit())
+    if form.validate_on_submit():
+        return task_page(form.number.data)
     if current_user.is_authenticated:
         files_lst = os.listdir(basedir)
         key = f'{current_user.id}' + '.png'
@@ -65,8 +70,8 @@ def index():
         param['files_lst'] = files_lst
         param['key'] = key
         param['path'] = path
-        return render_template('index.html', **param)
-    return render_template('index.html')
+        return render_template('index.html', form=form, **param)
+    return render_template('index.html', form=form, **param)
 
 
 @app.errorhandler(404)
@@ -331,7 +336,8 @@ def upload_file():
             for g in get_files:
                 os.mkdir(f'static/tests/{t.id + 1}/{g}')
                 for file in os.listdir(f'static/tmp_files/{current_user.id}/tests/{g}'):
-                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/{t.id + 1}/{g}/' + file)
+                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file,
+                               f'static/tests/{t.id + 1}/{g}/' + file)
 
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'static/tmp_files/{current_user.id}')
             shutil.rmtree(path)
@@ -346,7 +352,6 @@ def upload_file():
 
             input_data_str = create_data_for_task(f'static/tmp_files/input-{current_user.id}.txt')
             output_data_str = create_data_for_task(f'static/tmp_files/output-{current_user.id}.txt')
-
 
             task_new = Task(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str)
             db_sess.add(task_new)
@@ -474,7 +479,7 @@ def created_test_teach(id_teacher, id_test):
                 zadachi = tmp[0].split(',')[:-1]
         return render_template('created_test.html', title=id_test, zadachi=zadachi)
     else:
-        return redirect(url_for('error_404'))
+        return abort(404)
 
 
 @app.route('/create-new-task')
@@ -490,4 +495,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
