@@ -9,7 +9,7 @@ from .db_session import SqlAlchemyBase
 class Task(SqlAlchemyBase):
     __tablename__ = 'task'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
-    text = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
-    input_text = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
-    output_text = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
+    name = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
+    text = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
+    input_text = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
+    output_text = sqlalchemy.Column(sqlalchemy.Text, nullable=True)

@@ -19,12 +19,34 @@
                         <div>
                             {{ form.csrf_token }}
                         </div>
-                        <div class="form-group" style="text-align: center">
+                        <div class="" style="text-align: center">
                             {{ form.title(class="form-control text-email", type="str", placeholder="Название сборника") }}<br>
+                        </div>
+                        <div class="private" style="text-align: center">
+                            <ul class="" id="type_user" style="list-style-type: none;"
+                                type="radio">
+                                <li><input id="type_user-0" name="type_user" type="radio"
+                                           onchange="show_hide()"> <label for="type_user-0">Общедоступный сборник</label>
+                                </li>
+                                <li><input id="type_user-1" name="type_user" type="radio"
+                                           onchange="show_hide()" checked> <label
+                                        for="type_user-1">Приватный сборник</label>
+                                </li>
+                            </ul>
+                            <div id="hidden-div">
+                                <p>{{ form.password(type="password", class="form-control text-email", placeholder="Введите пароль для сборника задач") }}</p>
+                                {% for error in form.password.errors %}
+                                    <p class="alert alert-danger" role="alert">
+                                        {{ error }}
+                                    </p>
+                                {% endfor %}
+
+                            </div>
+
                         </div>
                         <div class="lst" style="text-align: center">{{ message }}</div>
                         <p class="submit btn-sub">
-                            <button type="submit" class="btn btn-default btn-md icon-right btn1">
+                            <button type="submit" class="btn btn-default btn-md icon-right btn1" style="margin-top: 30px">
                                 <span>Создать сборник</span>
                             </button>
                         </p>
@@ -42,6 +64,15 @@
         </div><!--.large-left-->
     </div><!--.row-->
 </div>
-
+<script>
+    function show_hide() {
+        item = document.getElementById('hidden-div');
+        if (item.style.display == 'none') {
+            item.style.display = ''
+        } else {
+            item.style.display = 'none'
+        }
+    }
+</script>
 </body>
 </html>

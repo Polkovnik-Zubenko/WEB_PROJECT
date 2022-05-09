@@ -5,4 +5,5 @@ from wtforms.validators import DataRequired
 
 class CreateCollection(FlaskForm):
     title = StringField('Введите название сборника', validators=[DataRequired()])
+    password = PasswordField('Введите пароль для сборника задач')
     submit = SubmitField('Создать')

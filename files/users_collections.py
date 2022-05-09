@@ -13,3 +13,4 @@ class Collections(SqlAlchemyBase):
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     title = sqlalchemy.Column(sqlalchemy.String, index=True, nullable=True)
     href_link = sqlalchemy.Column(sqlalchemy.String, index=True, nullable=True)
+    key_btn = sqlalchemy.Column(sqlalchemy.Integer, index=True, nullable=True)

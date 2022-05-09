@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все результаты</title>
+</head>
+<body>
+    {% for i in all_f %}
+        {% set info = i.split('//')%}
+        пользователь: {{info[0]}} <br>
+        {% if info[1] != '' %}
+            Верно решенные задачи учителей: 
+            {% set t_info = info[1].split(' ') %}
+            {% for j in t_info | sort() %}
+                {{j}}
+            {% endfor %}
+        {% endif %} <br>
+        {% if info[2] != '' %}
+            Верно решенные задачи создателей: 
+            {% set t_info = info[2].split(' ') %}
+            {% for j in t_info | sort() %}
+                {{j}}
+            {% endfor %}
+        {% endif %} <br>
+        <p>-----------------------------</p>
+    {% endfor %}
+    
+    <table>
+        <tbody>
+            <tr>
+                <th colspan="1">Имя и фамилия</th>
+                <th colspan="2">Решенные задачи</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>от учителей</th>
+                <th>от создателей</th>
+              </tr>
+            {% for i in all_f %}
+            <tr>
+                {% set info = i.split('//')%}
+                <td>{{info[0]}}</td>
+                {% if info[1] != '' %}
+                    {% set t_info = info[1].split(' ') %}
+                    <td>
+                        {% for j in t_info | sort() %}
+                            {{j}}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+                {% if info[2] != '' %}
+                    {% set t_info = info[2].split(' ') %}
+                    <td>
+                        {% for j in t_info | sort() %}
+                            {{j}}
+                        {% endfor %}
+                    </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
