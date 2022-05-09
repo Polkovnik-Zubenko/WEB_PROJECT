@@ -38,6 +38,8 @@ from forms.create_test import CreateTest
 from forms.create_collection import CreateCollection
 from files.users_collections import Collections
 from forms.create_new_task import CreateTask
+from forms.collection_password import CollectionPassword
+from files.users_collections import check_password_hash
 
 app = Flask(__name__)
 
@@ -101,20 +103,44 @@ def create_collection():
                 return render_template('create_collection.html', form=form,
                                        message="В названии сборника присутствует пробел")
             else:
-                new_collection = Collections(title=f'{current_user.name} {current_user.surname} {form.title.data}',
-                                             href_link=f'/collection/{current_user.surname}_{form.title.data}',
-                                             key_btn=create_secret_key())
-                db_sess.add(new_collection)
+                if form.password.data:
+                    new_collection = Collections(title=f'{current_user.name} {current_user.surname} {form.title.data}',
+                                                 href_link=f'/collection/{current_user.surname}_{form.title.data}',
+                                                 key_btn=create_secret_key())
+                    new_collection.set_password(form.password.data)
+                    db_sess.add(new_collection)
+                else:
+                    new_collection = Collections(title=f'{current_user.name} {current_user.surname} {form.title.data}',
+                                                 href_link=f'/collection/{current_user.surname}_{form.title.data}',
+                                                 key_btn=create_secret_key())
+                    db_sess.add(new_collection)
                 db_sess.commit()
                 return redirect('/')
 
     return render_template('create_collection.html', form=form)
 
 
-@app.route('/collection/<name_user>')
+@app.route('/collection/<name_user>', methods=["GET", "POST"])
 def collection(name_user):
     form = CreateTask()
-    return render_template('create_new_task.html', form=form)
+    db_sess = create_session()
+    collection1 = db_sess.query(Collections).filter(Collections.href_link == f'/collection/{name_user}').one_or_none()
+    if collection1.hashed_password is not None:
+        form = CollectionPassword()
+        course = db_sess.query(Collections).filter(
+            Collections.href_link == f'/collection/{name_user}').first()
+        if form.validate_on_submit():
+            collection2 = db_sess.query(Collections).filter(
+                Collections.href_link == f'/collection/{name_user}').one_or_none()
+            if collection2.check_password(form.password.data):
+                return render_template('create_new_task2.html', form=form)
+            else:
+                return render_template('collection_password.html', title_course=course.title,
+                                       message='Неправильный пароль', form=form)
+        return render_template('collection_password.html', title_course=course.title, form=form)
+    if current_user.is_authenticated and current_user.name + current_user.surname == collection1.title.split()[0] + \
+            collection1.title.split()[1]:
+    return render_template('create_new_task2.html', form=form)
 
 
 @app.route('/confirm_delete/<key_but>')

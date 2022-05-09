@@ -14,3 +14,11 @@ class Collections(SqlAlchemyBase):
     title = sqlalchemy.Column(sqlalchemy.String, index=True, nullable=True)
     href_link = sqlalchemy.Column(sqlalchemy.String, index=True, nullable=True)
     key_btn = sqlalchemy.Column(sqlalchemy.Integer, index=True, nullable=True)
+    hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+    def set_password(self, password):
+        self.hashed_password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.hashed_password, password)
+
