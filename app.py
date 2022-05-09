@@ -330,9 +330,7 @@ def upload_file():
             get_files = os.listdir(f'static/tmp_files/{current_user.id}/tests')
             os.mkdir(f'static/tests/teachers/{t.id + 1}')
             for g in get_files:
-                os.mkdir(f'static/tests/teachers/{t.id + 1}/{g}')
-                for file in os.listdir(f'static/tmp_files/{current_user.id}/tests/{g}'):
-                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/teachers/{t.id + 1}/{g}/' + file)
+                os.replace(f'static/tmp_files/{current_user.id}/tests/{g}', f'static/tests/teachers/{t.id + 1}/{g}')
 
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'static/tmp_files/{current_user.id}')
             shutil.rmtree(path)
