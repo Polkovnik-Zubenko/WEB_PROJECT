@@ -15,3 +15,4 @@ class Task_t(SqlAlchemyBase):
     text = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
     input_text = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
     output_text = sqlalchemy.Column(sqlalchemy.Text, nullable=True)
+    title_collection = sqlalchemy.Column(sqlalchemy.String, nullable=True)

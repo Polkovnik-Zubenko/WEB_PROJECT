@@ -124,7 +124,9 @@ def create_collection():
 def collection(name_user):
     form = CreateTask()
     db_sess = create_session()
+    author_flag = False
     collection1 = db_sess.query(Collections).filter(Collections.href_link == f'/collection/{name_user}').one_or_none()
+    new_tasks = db_sess.query(Task_t).filter(Task_t.title_collection == collection1.title).all()
     if collection1.hashed_password is not None:
         form = CollectionPassword()
         course = db_sess.query(Collections).filter(
@@ -133,14 +135,27 @@ def collection(name_user):
             collection2 = db_sess.query(Collections).filter(
                 Collections.href_link == f'/collection/{name_user}').one_or_none()
             if collection2.check_password(form.password.data):
-                return render_template('create_new_task2.html', form=form)
+                if current_user.is_authenticated and current_user.name + current_user.surname == \
+                        collection1.title.split()[0] + \
+                        collection1.title.split()[1]:
+                    author_flag = True
+                    return render_template('teachers_tasks.html', title=collection1.title, new_tasks=new_tasks,
+                                           name_user=name_user, author_flag=author_flag)
+                else:
+                    return render_template('teachers_tasks.html', title=collection1.title, new_tasks=new_tasks,
+                                           name_user=name_user, form=form)
             else:
                 return render_template('collection_password.html', title_course=course.title,
-                                       message='Неправильный пароль', form=form)
+                                       message='Неправильный пароль', name_user=name_user, form=form)
         return render_template('collection_password.html', title_course=course.title, form=form)
+
     if current_user.is_authenticated and current_user.name + current_user.surname == collection1.title.split()[0] + \
             collection1.title.split()[1]:
-    return render_template('create_new_task2.html', form=form)
+        author_flag = True
+        return render_template('teachers_tasks.html', title=collection1.title, new_tasks=new_tasks,
+                               name_user=name_user, author_flag=author_flag)
+    else:
+        return render_template('teachers_tasks.html', new_tasks=new_tasks, name_user=name_user, title=collection1.title)
 
 
 @app.route('/confirm_delete/<key_but>')
@@ -409,8 +424,8 @@ def about_team():
         return render_template('team_project.html')
 
 
-@app.route('/path', methods=["POST", "GET"])
-def upload_file():
+@app.route('/path/<title_collection>', methods=["POST", "GET"])
+def upload_file(title_collection):
     if request.method == "POST":
         id = request.form['id']
         if id == '0':
@@ -447,14 +462,16 @@ def upload_file():
             input_data_str = create_data_for_task(f'static/tmp_files/input-{current_user.id}.txt')
             output_data_str = create_data_for_task(f'static/tmp_files/output-{current_user.id}.txt')
 
-            task_new = Task_t(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str)
+            task_new = Task_t(name=name_task, text=text_task, input_text=input_data_str, output_text=output_data_str,
+                              title_collection=title_collection)
             db_sess.add(task_new)
             db_sess.commit()
 
             os.remove(f'static/tmp_files/input-{current_user.id}.txt')
             os.remove(f'static/tmp_files/output-{current_user.id}.txt')
 
-            return redirect('/')
+            href = '_'.join([title_collection.split()[1], title_collection.split()[2]])
+            return redirect(f'/collection/{href}')
         else:
             zadacha = request.form['type']
             file = request.files['solut']
@@ -569,15 +586,16 @@ def create_data_for_task(name_file):
 @app.route('/task/<int:id_task>')
 def task_page(id_task):
     db_sess = create_session()
+    collection_title = '/tasks'
     t = db_sess.query(Task).filter(Task.id == id_task).first()
-    return render_template('task_template.html', t=t, z="c")
+    return render_template('task_template.html', collection_title=collection_title, t=t, z="c")
 
 
-@app.route('/task_t/<int:id_task>')
-def task_page_t(id_task):
+@app.route('/task_t/collection/<collection_title>/<int:id_task>')
+def task_page_t(collection_title, id_task):
     db_sess = create_session()
     t = db_sess.query(Task_t).filter(Task_t.id == id_task).first()
-    return render_template('task_template.html', t=t, z="t")
+    return render_template('task_template.html', collection_title=collection_title, t=t, z="t")
 
 
 @app.route('/tasks')
@@ -648,13 +666,9 @@ def created_test_teach(id_teacher, id_test):
         return abort(404)
 
 
-@app.route('/create-new-task')
-def create_new_task():
-    form = CreateTask()
-    if form.validate_on_submit():
-        url_for('upload_file')
-
-    return render_template('create_new_task2.html', form=form)
+@app.route('/create-new-task/<title_collection>')
+def create_new_task(title_collection):
+    return render_template('create_new_task2.html', title_collection=title_collection)
 
 
 @app.route('/all-result')

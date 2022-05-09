@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css"
           href="https://informatics.msk.ru/theme/yui_combo.php?rollup/3.17.2/yui-moodlesimple-min.css"/>
     <link rel="shortcut icon" href="/static/img/main_logo.png" type="image/png">
     <link rel="stylesheet" type="text/css" href="https://informatics.msk.ru/theme/styles.php/boost/1640770659_1/all"/>
     <link rel="stylesheet" href="../static/css/login.css">
-    <title>Задачи</title>
+
+    <title>{{ title }}</title>
 </head>
 <body>
-    <div id="page-content" class="row pb-3 d-print-block">
+<div id="page-content" class="row pb-3 d-print-block">
     <div id="region-main-box" class="col-12">
         <section id="region-main" class="has-blocks mb-3" aria-label="Содержимое">
             <span class="notifications" id="user-notifications"></span>
@@ -24,14 +23,14 @@
                         <div class="content">
                             <div class="category loaded with_children" data-categoryid="354"
                                  data-depth="1" data-showcourses="10" data-type="0">
-                                <div class="info"><h3 class="categoryname aabtn">Московская олимпиада школьников</h3></div>
+                                <div class="info"><h3 class="categoryname aabtn">{{ title }}</h3></div>
                                 <div class="content">
-                                    {% for item in t %}
+                                    {% for item in new_tasks %}
                                         <div class="coursebox clearfix odd first collapsed"
                                              data-courseid="666" data-type="1">
                                             <div class="info" style="text-align: center">
                                                 <div class="coursename"><a class="aalink" style="color: #c72929"
-                                                                           href="/task/{{ item.id }}">{{ item.name }}</a>
+                                                                           href="/task_t/collection/{{ name_user }}/{{ item.id }}">{{ item.name }}</a>
                                                 </div>
                                             </div>
                                             <div class="content"></div>
@@ -49,7 +48,26 @@
             <aside id="block-region-side-pre" class="block-region" data-blockregion="side-pre"
                    data-droptarget="1"><a href="#sb-1" class="sr-only sr-only-focusable">Пропустить Что
                 происходит</a>
+                {% if author_flag %}
+                    <span id="sb-1"></span><a href="#sb-2" class="sr-only sr-only-focusable">Пропустить К задаче
+                        №</a>
 
+                    <section id="inst931"
+                             class=" block_problembynumber block  card mb-3"
+                             role="complementary"
+                             data-block="problembynumber"
+                             aria-labelledby="instance-931-header"
+                    >
+                        <div class="card-body p-3">
+
+                            <h5 id="instance-931-header" class="card-title d-inline">Создание задачи</h5>
+                            <div class="card-text content mt-3">
+                                <a class="btn" href="/create-new-task/{{ title }}"
+                                   style="color: whitesmoke; background-color: #9a0097">Создать задачу</a>
+                            </div>
+                        </div>
+                    </section>
+                {% endif %}
                 <span id="sb-1"></span><a href="#sb-2" class="sr-only sr-only-focusable">Пропустить К задаче
                     №</a>
 

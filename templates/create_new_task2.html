@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/static/img/main_logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/css/create_task.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <title>Добавление новой задачи</title>
+</head>
+<body>
+    <div class="all">
+        <div class="all_container">
+            <h2>Добавить новую задачу</h2>
+            <form action="/path/{{ title_collection }}" method="post" enctype="multipart/form-data">
+                <p><input type="text" name="name" placeholder="Введите название задачи" class="form-control"></p>
+                <p><textarea name="text-task" class="form-control form-control-sm" placeholder="Введите текст задачи"></textarea></p>
+                <p>Введите вводные данные для первого теста<input type="file" name="input_data" class="form-control"></p>
+                <p>Введите результат для первого теста<input type="file" name="output_data" class="form-control"></p>
+                <p>
+                    Прикрепите архив с расширение rar, в котором буду содержаться тесты для задачи. <br>
+                    Сначала в архиве должна быть папка под названием tests, а в ней должны содержаться <br>
+                    файлы без расширения и файлы с расширением "a". Файл без расширения преднозначен <br>
+                    для входных данных, а файл с расширение "a" преднозначен для результата. У каждого файла <br>
+                    должна быть пара, то есть если существует файл "1", то должен быть и файл "1.a". <br>
+                    Файлы нужно называть от одного 1 и до бесконечности(в зависимости сколько имеется тестов)
+                </p>
+                <p><input type="file" name='file' class="form-control"></p>
+                <input type="hidden" name="id" value="zip">
+                <p><button type="submit" class="btn btn-primary">Создать</button></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

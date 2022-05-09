@@ -42,6 +42,11 @@
         {% else %}
             <p>Войдите, чтобы сдавать задачи на проверку.</p>
         {% endif %}
+        {% if collection_title == '/tasks' %}
+            <a class="btn" href="{{ collection_title }}" style="color: whitesmoke; background-color: #9a0097">Вернуться в список задач</a>
+        {% else %}
+            <a class="btn" href="/collection/{{ collection_title }}" style="color: whitesmoke; background-color: #9a0097">Вернуться в список задач</a>
+        {% endif %}
     </div>
     <div class="verdictOUT">
         {% with messages = get_flashed_messages() %}
