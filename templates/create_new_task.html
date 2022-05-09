@@ -14,11 +14,24 @@
     <div class="all_container">
         <h2>Добавить новую задачу</h2>
         <form action="/path" method="post" enctype="multipart/form-data">
-            <p><input type="text" name="name" placeholder="Введите название задачи" class="form-control"></p>
-            <p><textarea name="text-task" class="form-control form-control-sm"
-                         placeholder="Введите текст задачи"></textarea></p>
-            <p>Введите вводные данные для первого теста<input type="file" name="input_data" class="form-control"></p>
-            <p>Введите результат для первого теста<input type="file" name="output_data" class="form-control"></p>
+            <div>
+                {{ form.csrf_token }}
+            </div>
+            <p>{{ form.title(class="form-control", placeholder="Введите название задачи") }}</p>
+            {% for error in form.title.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            <p>{{ form.discription(class="form-control", placeholder="Введите условие задачи") }}</p>
+            {% for error in form.discription.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            <p>Введите входные данные для первого
+                теста {{ form.input(class="form-control") }}</p>
+            <p>Введите выходные данные для первого теста {{ form.output(class="form-control") }}</p>
             <p>
                 Прикрепите архив с расширение rar, в котором буду содержаться тесты для задачи. <br>
                 Сначала в архиве должна быть папка под названием tests, а в ней должны содержаться <br>
@@ -28,15 +41,11 @@
                 должна быть пара, то есть если существует файл "1", то должен быть и файл "1.a". <br>
                 Файлы нужно называть от одного 1 и до бесконечности(в зависимости сколько имеется тестов).
             </p>
-            <p><input type="file" name='file' class="form-control"></p>
-            <input type="hidden" name="id" value="zip">
+            <p>{{ form.tests(class="form-control") }}</p>
             <p>
-                <button type="submit" class="btn btn-primary"
-                        style="background-color: #9a0097; color: whitesmoke; margin-right: 50px">Создать
-                </button>
-                <button type="" class="btn btn-primary" style="background-color: #9a0097; color: whitesmoke"
-                        href="/">Вернуться в главное меню
-                </button>
+                {{ form.submit(type="submit", class="btn btn-primary", style="background-color: #9a0097; color: whitesmoke; border: black; margin-right: 50px" ) }}
+                <a class="btn btn btn-primary" style="background-color: #9a0097; color: whitesmoke" href="/">Вернуться в
+                    главное меню</a>
             </p>
         </form>
     </div>

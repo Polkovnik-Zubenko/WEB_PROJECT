@@ -37,6 +37,7 @@ from forms.number_task import NumberTask
 from forms.create_test import CreateTest
 from forms.create_collection import CreateCollection
 from files.users_collections import Collections
+from forms.create_new_task import CreateTask
 
 app = Flask(__name__)
 
@@ -46,7 +47,7 @@ login_manager.init_app(app)
 db_session.global_init('db/db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = "b_5#y2LF4Q8z\n\xec]/''wqe"
-app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=20)
+app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(hours=1)
 basedir = os.path.abspath(os.path.dirname('static/img/profiles/'))
 solutdir = os.path.abspath(os.path.dirname('static/solutions/'))
 newtaskdir = os.path.abspath(os.path.dirname('static/tmp_files/'))
@@ -364,8 +365,6 @@ def recovery_password(id_user):
                 user.set_password(form.password.data)
                 db_sess.commit()
                 return redirect('/')
-                # return render_template('recovery-password.html', title='Восстановление пароля', form=form,
-                #                        message="Пароль был успешно изменён!")
         return render_template('recovery-password.html', message="Неправильный пароль", form=form)
     return render_template('recovery-password.html', title='Восстановление пароля', u=u, path=path, files_lst=files_lst,
                            key=key, form=form)
@@ -404,9 +403,7 @@ def upload_file():
             get_files = os.listdir(f'static/tmp_files/{current_user.id}/tests')
             os.mkdir(f'static/tests/teachers/{t.id + 1}')
             for g in get_files:
-                os.mkdir(f'static/tests/teachers/{t.id + 1}/{g}')
-                for file in os.listdir(f'static/tmp_files/{current_user.id}/tests/{g}'):
-                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/teachers/{t.id + 1}/{g}/' + file)
+                os.replace(f'static/tmp_files/{current_user.id}/tests/{g}', f'static/tests/teachers/{t.id + 1}/{g}')
 
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'static/tmp_files/{current_user.id}')
             shutil.rmtree(path)
@@ -555,7 +552,11 @@ def created_test_teach(id_teacher, id_test):
 
 @app.route('/create-new-task')
 def create_new_task():
-    return render_template('create_new_task.html')
+    form = CreateTask()
+    if form.validate_on_submit():
+        url_for('upload_file')
+
+    return render_template('create_new_task.html', form=form)
 
 
 @app.route('/logout')
