@@ -20,23 +20,19 @@ from flask_sqlalchemy import SQLAlchemy
 
 from files.db_session import SqlAlchemyBase
 from files.new_password import Password
-from files.task_t import Task_t
 from files.tasks import Task
 from forms.login import LoginForm
 from forms.user import RegisterForm
 from files import db_session
 import datetime
 from files.users import User
+from files.task_t import Task_t
 from email_send import send_email
 from forms.forgot_password import ForgotForm
 from forms.profile_edit import ProfileEdit
 from forms.profile_new_password import RecoveryPassword
 from email_send import create_secret_key
 from forms.recovery_password import RecoveryPassword2
-from forms.number_task import NumberTask
-from forms.create_test import CreateTest
-from forms.create_collection import CreateCollection
-from files.users_collections import Collections
 
 app = Flask(__name__)
 
@@ -45,7 +41,7 @@ login_manager.init_app(app)
 
 db_session.global_init('db/db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SECRET_KEY'] = "b_5#y2LF4Q8z\n\xec]/''wqe"
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=20)
 basedir = os.path.abspath(os.path.dirname('static/img/profiles/'))
 solutdir = os.path.abspath(os.path.dirname('static/solutions/'))
@@ -60,12 +56,8 @@ def load_user(user_id):
     return session.query(User).filter(User.id == user_id).one_or_none()
 
 
-@app.route('/', methods=["GET", "POST"])
+@app.route('/')
 def index():
-    form = NumberTask()
-    delete_flag = False
-    db_sess = create_session()
-    collection = db_sess.query(Collections).all()
     param = {}
     if current_user.is_authenticated:
         files_lst = os.listdir(basedir)
@@ -74,74 +66,8 @@ def index():
         param['files_lst'] = files_lst
         param['key'] = key
         param['path'] = path
-    if form.validate_on_submit():
-        task = db_sess.query(Task).filter(Task.id == form.number.data).one_or_none()
-        if task:
-            return task_page(form.number.data)
-        else:
-            return render_template('index.html', message="Данная задача отсутствует в библиотеке", form=form,
-                                   collection=collection, delete_flag=delete_flag, **param)
-
-    return render_template('index.html', form=form, collection=collection, **param)
-
-
-@app.route('/create_collection', methods=["GET", "POST"])
-def create_collection():
-    form = CreateCollection()
-    if form.validate_on_submit():
-        db_sess = create_session()
-        collection = db_sess.query(Collections).filter(
-            Collections.title == f'{current_user.name} {current_user.surname} {form.title.data}').one_or_none()
-        if collection:
-            return render_template('create_collection.html', form=form,
-                                   message="Сборник с таким названием уже существует")
-        else:
-            if ' ' in list(str(form.title.data)):
-                return render_template('create_collection.html', form=form,
-                                       message="В названии сборника присутствует пробел")
-            else:
-                new_collection = Collections(title=f'{current_user.name} {current_user.surname} {form.title.data}',
-                                             href_link=f'/collection/{current_user.surname}_{form.title.data}')
-                db_sess.add(new_collection)
-                db_sess.commit()
-                return redirect('/')
-
-    return render_template('create_collection.html', form=form)
-
-
-@app.route('/collection/<name_user>')
-def collection(name_user):
-    return render_template('create_new_task.html')
-
-
-@app.route('/confirm_delete')
-def confirm_delete():
-    form = NumberTask()
-    delete_flag = True
-    db_sess = create_session()
-    collection = db_sess.query(Collections).all()
-    param = {}
-    if current_user.is_authenticated:
-        files_lst = os.listdir(basedir)
-        key = f'{current_user.id}' + '.png'
-        path = f'/static/img/profiles/{current_user.id}.png'
-        param['files_lst'] = files_lst
-        param['key'] = key
-        param['path'] = path
-        return render_template('index.html', form=form,
-                               collection=collection, delete_flag=delete_flag, **param)
-
-
-@app.route('/collection_delete/<collection_id>')
-def collection_delete(collection_id):
-    db_sess = create_session()
-    collection = db_sess.query(Collections).filter(Collections.id == collection_id).one_or_none()
-    if collection:
-        db_sess.delete(collection)
-        db_sess.commit()
-    else:
-        abort(404)
-    return redirect('/')
+        return render_template('index.html', **param)
+    return render_template('index.html')
 
 
 @app.errorhandler(404)
@@ -404,9 +330,7 @@ def upload_file():
             get_files = os.listdir(f'static/tmp_files/{current_user.id}/tests')
             os.mkdir(f'static/tests/teachers/{t.id + 1}')
             for g in get_files:
-                os.mkdir(f'static/tests/teachers/{t.id + 1}/{g}')
-                for file in os.listdir(f'static/tmp_files/{current_user.id}/tests/{g}'):
-                    os.replace(f'static/tmp_files/{current_user.id}/tests/{g}/' + file, f'static/tests/teachers/{t.id + 1}/{g}/' + file)
+                os.replace(f'static/tmp_files/{current_user.id}/tests/{g}', f'static/tests/teachers/{t.id + 1}/{g}')
 
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), f'static/tmp_files/{current_user.id}')
             shutil.rmtree(path)
@@ -432,40 +356,104 @@ def upload_file():
 
             return redirect('/')
         else:
+            zadacha = request.form['type']
             file = request.files['solut']
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][1]}", 'solution.py'))
-
-            path_file = 'static/solutions/solution.py'
-            path = f'static/tests/{id}'
-            otv = 'OK'
-
-            for test in range(len(glob.glob(f'{path}/*')) // 2):
-                if len(str(test)) == 1:
-                    test = f'0{test + 1}'
-                else:
+            if zadacha == "t":
+                path_file = 'static/solutions/solution.py'
+                path = f'static/tests/teachers/{id}'
+                otv = 'OK'
+                for test in range(len(glob.glob(f'{path}/*')) // 2):
                     test = f'{test + 1}'
-                with open(f"{path}/{test}") as input_:
-                    input_ = input_.readlines()
-                    input_ = [line.rstrip() for line in input_]
-                p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                     encoding='utf-8',
-                                     stdin=subprocess.PIPE)  # запуск файла
-                for i in input_:  # передача данных в файл
-                    p.stdin.write(f'{i}\n')
-                with open(f'{path}/{test}.a') as output_:
-                    output_ = output_.readlines()
-                    output_ = [line.rstrip() for line in output_]
-                output_program, error = p.communicate()
-                if output_ == output_program.split('\n')[:-1]:
-                    pass
-                elif error:
-                    otv = f'Ошибка в тесте: {test}+{error}'
-                    break
-                else:
-                    otv = f'Ошибка в тесте: {test}'
-                    break
-            flash(otv)
-            return redirect(url_for('task_page', id_task=id))
+                    with open(f"{path}/{test}") as input_:
+                        input_ = input_.readlines()
+                        input_ = [line.rstrip() for line in input_]
+                    p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                        encoding='utf-8',
+                                        stdin=subprocess.PIPE)  # запуск файла
+                    for i in input_:  # передача данных в файл
+                        p.stdin.write(f'{i}\n')
+                    with open(f'{path}/{test}.a') as output_:
+                        output_ = output_.readlines()
+                        output_ = [line.rstrip() for line in output_]
+                    output_program, error = p.communicate()
+                    if output_ == output_program.split('\n')[:-1]:
+                        pass
+                    elif error:
+                        otv = f'Ошибка в тесте: {test}+{error}'
+                        break
+                    else:
+                        otv = f'Ошибка в тесте: {test}'
+                        break
+                if otv == "OK":
+                    if os.path.exists(f'static/tests/results/{current_user.id}.txt'):
+                        f = open(f'static/tests/results/{current_user.id}.txt', mode='a')
+                        if zadacha == "t":
+                            f.write(f'{id} t\n')
+                        else:
+                            f.write(f'{id} c\n')
+                    else:
+                        f = open(f'static/tests/results/{current_user.id}.txt', mode='w')
+                        if zadacha == "t":
+                            f.write(f'{id} t\n')
+                        else:
+                            f.write(f'{id} c\n')
+                flash(otv)
+                return redirect(url_for('task_page_t', id_task=id))
+            else:
+                path_file = 'static/solutions/solution.py'
+                path = f'static/tests/{id}'
+                otv = 'OK'
+                for test in range(len(glob.glob(f'{path}/*')) // 2):
+                    if len(str(test)) == 1:
+                        test = f'0{test + 1}'
+                    else:
+                        test = f'{test + 1}'
+                    with open(f"{path}/{test}") as input_:
+                        input_ = input_.readlines()
+                        input_ = [line.rstrip() for line in input_]
+                    p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                        encoding='utf-8',
+                                        stdin=subprocess.PIPE)  # запуск файла
+                    for i in input_:  # передача данных в файл
+                        p.stdin.write(f'{i}\n')
+                    with open(f'{path}/{test}.a') as output_:
+                        output_ = output_.readlines()
+                        output_ = [line.rstrip() for line in output_]
+                    output_program, error = p.communicate()
+                    if output_ == output_program.split('\n')[:-1]:
+                        pass
+                    elif error:
+                        otv = f'Ошибка в тесте: {test}+{error}'
+                        break
+                    else:
+                        otv = f'Ошибка в тесте: {test}'
+                        break
+                if otv == "OK":
+                    if os.path.exists(f'static/tests/results{current_user.id}.txt'):
+                        f = open(f'static/tests/results{current_user.id}.txt', mode='a')
+                        g = f.readlines()
+                        g = [line.rstrip() for line in g]
+                        if f'{id} t\n' in g:
+                            pass
+                        else:
+                            if zadacha == "t":
+                                f.write(f'{id} t\n')
+                            else:
+                                f.write(f'{id} c\n')
+                    else:
+                        f = open(f'static/tests/results{current_user.id}.txt', mode='w')
+                        g = f.readlines()
+                        g = [line.rstrip() for line in g]
+                        if f'{id} t\n' in g:
+                            pass
+                        else:
+                            if zadacha == "t":
+                                f.write(f'{id} t\n')
+                            else:
+                                f.write(f'{id} c\n')
+                flash(otv)
+                return redirect(url_for('task_page', id_task=id))
 
 
 def create_data_for_task(name_file):
@@ -482,7 +470,14 @@ def create_data_for_task(name_file):
 def task_page(id_task):
     db_sess = create_session()
     t = db_sess.query(Task).filter(Task.id == id_task).first()
-    return render_template('task_template.html', t=t)
+    return render_template('task_template.html', t=t, z="c")
+
+
+@app.route('/task_t/<int:id_task>')
+def task_page_t(id_task):
+    db_sess = create_session()
+    t = db_sess.query(Task_t).filter(Task_t.id == id_task).first()
+    return render_template('task_template.html', t=t, z="t")
 
 
 @app.route('/tasks')
@@ -550,12 +545,20 @@ def created_test_teach(id_teacher, id_test):
                 zadachi = tmp[0].split(',')[:-1]
         return render_template('created_test.html', title=id_test, zadachi=zadachi)
     else:
-        return abort(404)
+        return redirect(url_for('error_404'))
 
 
 @app.route('/create-new-task')
 def create_new_task():
     return render_template('create_new_task.html')
+
+
+@app.route('/all-result')
+def all_result():
+    files = os.listdir('static/tests/results/')
+    for file in files:
+        print(file)
+    return render_template('all_result.html')
 
 
 @app.route('/logout')
@@ -566,4 +569,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
