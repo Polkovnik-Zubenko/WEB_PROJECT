@@ -356,40 +356,104 @@ def upload_file():
 
             return redirect('/')
         else:
+            zadacha = request.form['type']
             file = request.files['solut']
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][1]}", 'solution.py'))
-
-            path_file = 'static/solutions/solution.py'
-            path = f'static/tests/{id}'
-            otv = 'OK'
-
-            for test in range(len(glob.glob(f'{path}/*')) // 2):
-                if len(str(test)) == 1:
-                    test = f'0{test + 1}'
-                else:
+            if zadacha == "t":
+                path_file = 'static/solutions/solution.py'
+                path = f'static/tests/teachers/{id}'
+                otv = 'OK'
+                for test in range(len(glob.glob(f'{path}/*')) // 2):
                     test = f'{test + 1}'
-                with open(f"{path}/{test}") as input_:
-                    input_ = input_.readlines()
-                    input_ = [line.rstrip() for line in input_]
-                p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                     encoding='utf-8',
-                                     stdin=subprocess.PIPE)  # запуск файла
-                for i in input_:  # передача данных в файл
-                    p.stdin.write(f'{i}\n')
-                with open(f'{path}/{test}.a') as output_:
-                    output_ = output_.readlines()
-                    output_ = [line.rstrip() for line in output_]
-                output_program, error = p.communicate()
-                if output_ == output_program.split('\n')[:-1]:
-                    pass
-                elif error:
-                    otv = f'Ошибка в тесте: {test}+{error}'
-                    break
-                else:
-                    otv = f'Ошибка в тесте: {test}'
-                    break
-            flash(otv)
-            return redirect(url_for('task_page', id_task=id))
+                    with open(f"{path}/{test}") as input_:
+                        input_ = input_.readlines()
+                        input_ = [line.rstrip() for line in input_]
+                    p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                        encoding='utf-8',
+                                        stdin=subprocess.PIPE)  # запуск файла
+                    for i in input_:  # передача данных в файл
+                        p.stdin.write(f'{i}\n')
+                    with open(f'{path}/{test}.a') as output_:
+                        output_ = output_.readlines()
+                        output_ = [line.rstrip() for line in output_]
+                    output_program, error = p.communicate()
+                    if output_ == output_program.split('\n')[:-1]:
+                        pass
+                    elif error:
+                        otv = f'Ошибка в тесте: {test}+{error}'
+                        break
+                    else:
+                        otv = f'Ошибка в тесте: {test}'
+                        break
+                if otv == "OK":
+                    if os.path.exists(f'static/tests/results/{current_user.id}.txt'):
+                        f = open(f'static/tests/results/{current_user.id}.txt', mode='a')
+                        if zadacha == "t":
+                            f.write(f'{id} t\n')
+                        else:
+                            f.write(f'{id} c\n')
+                    else:
+                        f = open(f'static/tests/results/{current_user.id}.txt', mode='w')
+                        if zadacha == "t":
+                            f.write(f'{id} t\n')
+                        else:
+                            f.write(f'{id} c\n')
+                flash(otv)
+                return redirect(url_for('task_page_t', id_task=id))
+            else:
+                path_file = 'static/solutions/solution.py'
+                path = f'static/tests/{id}'
+                otv = 'OK'
+                for test in range(len(glob.glob(f'{path}/*')) // 2):
+                    if len(str(test)) == 1:
+                        test = f'0{test + 1}'
+                    else:
+                        test = f'{test + 1}'
+                    with open(f"{path}/{test}") as input_:
+                        input_ = input_.readlines()
+                        input_ = [line.rstrip() for line in input_]
+                    p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                        encoding='utf-8',
+                                        stdin=subprocess.PIPE)  # запуск файла
+                    for i in input_:  # передача данных в файл
+                        p.stdin.write(f'{i}\n')
+                    with open(f'{path}/{test}.a') as output_:
+                        output_ = output_.readlines()
+                        output_ = [line.rstrip() for line in output_]
+                    output_program, error = p.communicate()
+                    if output_ == output_program.split('\n')[:-1]:
+                        pass
+                    elif error:
+                        otv = f'Ошибка в тесте: {test}+{error}'
+                        break
+                    else:
+                        otv = f'Ошибка в тесте: {test}'
+                        break
+                if otv == "OK":
+                    if os.path.exists(f'static/tests/results{current_user.id}.txt'):
+                        f = open(f'static/tests/results{current_user.id}.txt', mode='a')
+                        g = f.readlines()
+                        g = [line.rstrip() for line in g]
+                        if f'{id} t\n' in g:
+                            pass
+                        else:
+                            if zadacha == "t":
+                                f.write(f'{id} t\n')
+                            else:
+                                f.write(f'{id} c\n')
+                    else:
+                        f = open(f'static/tests/results{current_user.id}.txt', mode='w')
+                        g = f.readlines()
+                        g = [line.rstrip() for line in g]
+                        if f'{id} t\n' in g:
+                            pass
+                        else:
+                            if zadacha == "t":
+                                f.write(f'{id} t\n')
+                            else:
+                                f.write(f'{id} c\n')
+                flash(otv)
+                return redirect(url_for('task_page', id_task=id))
 
 
 def create_data_for_task(name_file):
@@ -406,14 +470,14 @@ def create_data_for_task(name_file):
 def task_page(id_task):
     db_sess = create_session()
     t = db_sess.query(Task).filter(Task.id == id_task).first()
-    return render_template('task_template.html', t=t)
+    return render_template('task_template.html', t=t, z="c")
 
 
 @app.route('/task_t/<int:id_task>')
 def task_page_t(id_task):
     db_sess = create_session()
     t = db_sess.query(Task_t).filter(Task_t.id == id_task).first()
-    return render_template('task_template.html', t=t)
+    return render_template('task_template.html', t=t, z="t")
 
 
 @app.route('/tasks')
@@ -487,6 +551,14 @@ def created_test_teach(id_teacher, id_test):
 @app.route('/create-new-task')
 def create_new_task():
     return render_template('create_new_task.html')
+
+
+@app.route('/all-result')
+def all_result():
+    files = os.listdir('static/tests/results/')
+    for file in files:
+        print(file)
+    return render_template('all_result.html')
 
 
 @app.route('/logout')
