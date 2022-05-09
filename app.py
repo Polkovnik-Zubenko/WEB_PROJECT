@@ -555,10 +555,30 @@ def create_new_task():
 
 @app.route('/all-result')
 def all_result():
+    db_sess = create_session()
     files = os.listdir('static/tests/results/')
+    all_files = []
     for file in files:
-        print(file)
-    return render_template('all_result.html')
+        str_ = ''
+        u = db_sess.query(User).filter(User.id == file.split('.')[0]).first()
+        str_ = f"{u.name} {u.surname}//"
+        with open(f'static/tests/results/{file}') as f:
+            g = f.readlines()
+            g = [line.rstrip() for line in g]
+            for i in g:
+                if i.split(' ')[-1] == "t":
+                    str2_ = i.split(' ')[0]
+                    str_ = f'{str_}{str2_} '
+                str_ = f"{str_}//"
+            for i in g:
+                if i.split(' ')[-1] == "c":
+                    str2_ = i.split(' ')[0]
+                    str_ = f'{str_}{str2_} '
+                str_ = f"{str_}//"
+        all_files.append(str_)
+        print(all_files)
+
+    return render_template('all_result.html', all_f=all_files)
 
 
 @app.route('/logout')
