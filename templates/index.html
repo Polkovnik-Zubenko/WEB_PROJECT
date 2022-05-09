@@ -244,6 +244,28 @@
                                                             <div class="coursename"><a class="aalink"
                                                                                        href="{{ item.href_link }}">{{ item.title }}</a>
                                                             </div>
+                                                            {% if current_user.is_authenticated  and current_user.name + current_user.surname == item.title.split()[0] + item.title.split()[1] %}
+                                                                {% if delete_flag %}
+                                                                    <div style="margin-left: 500px">
+                                                                        <a href="/"
+                                                                           class="btn btn-success">
+                                                                            Отменить удаление
+                                                                        </a>
+                                                                        <a href="/collection_delete/{{ item.id }}"
+                                                                           class="btn btn-danger">
+                                                                            Подтвердить удаление
+                                                                        </a>
+                                                                    </div>
+
+
+                                                                {% else %}
+                                                                    <a href="/confirm_delete" class="btn btn-danger"
+                                                                       style="margin-left:
+                                                                        500px">
+                                                                        Удалить
+                                                                    </a>
+                                                                {% endif %}
+                                                            {% endif %}
                                                             <div class="moreinfo"><a title="Описание"
                                                                                      href=""><i
                                                                     class="icon fa fa-info fa-fw " title="Описание"
@@ -318,7 +340,8 @@
                                         <h5 id="instance-931-header" class="card-title d-inline">Создать сборник
                                             задач</h5>
                                         <div class="card-text content mt-3">
-                                            <a class="btn" href="/create_collection" style="color: whitesmoke; background-color: #9a0097">Создать сборник</a>
+                                            <a class="btn" href="/create_collection"
+                                               style="color: whitesmoke; background-color: #9a0097">Создать сборник</a>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -349,7 +372,7 @@
                                                                 src="https://informatics.msk.ru/theme/image.php/boost/page/1640770659/icon"
                                                                 class="iconlarge activityicon" alt=""
                                                                 role="presentation" aria-hidden="true"/><span
-                                                                class="instancename" style="color: #c72929">Команда проекта<span
+                                                                class="instancename">Команда проекта<span
                                                                 class="accesshide "> Страница</span></span></a></div>
                                                     </div>
                                                 </div>

@@ -45,7 +45,7 @@ login_manager.init_app(app)
 
 db_session.global_init('db/db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['SECRET_KEY'] = "b_5#y2LF4Q8z\n\xec]/''wqe"
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=20)
 basedir = os.path.abspath(os.path.dirname('static/img/profiles/'))
 solutdir = os.path.abspath(os.path.dirname('static/solutions/'))
@@ -63,10 +63,9 @@ def load_user(user_id):
 @app.route('/', methods=["GET", "POST"])
 def index():
     form = NumberTask()
+    delete_flag = False
     db_sess = create_session()
     collection = db_sess.query(Collections).all()
-    for item in collection:
-        print(item.title)
     param = {}
     if current_user.is_authenticated:
         files_lst = os.listdir(basedir)
@@ -81,7 +80,7 @@ def index():
             return task_page(form.number.data)
         else:
             return render_template('index.html', message="Данная задача отсутствует в библиотеке", form=form,
-                                   collection=collection, **param)
+                                   collection=collection, delete_flag=delete_flag, **param)
 
     return render_template('index.html', form=form, collection=collection, **param)
 
@@ -97,7 +96,7 @@ def create_collection():
             return render_template('create_collection.html', form=form,
                                    message="Сборник с таким названием уже существует")
         else:
-            if ' ' in list(str(form.title.data.isspace)):
+            if ' ' in list(str(form.title.data)):
                 return render_template('create_collection.html', form=form,
                                        message="В названии сборника присутствует пробел")
             else:
@@ -113,6 +112,36 @@ def create_collection():
 @app.route('/collection/<name_user>')
 def collection(name_user):
     return render_template('create_new_task.html')
+
+
+@app.route('/confirm_delete')
+def confirm_delete():
+    form = NumberTask()
+    delete_flag = True
+    db_sess = create_session()
+    collection = db_sess.query(Collections).all()
+    param = {}
+    if current_user.is_authenticated:
+        files_lst = os.listdir(basedir)
+        key = f'{current_user.id}' + '.png'
+        path = f'/static/img/profiles/{current_user.id}.png'
+        param['files_lst'] = files_lst
+        param['key'] = key
+        param['path'] = path
+        return render_template('index.html', form=form,
+                               collection=collection, delete_flag=delete_flag, **param)
+
+
+@app.route('/collection_delete/<collection_id>')
+def collection_delete(collection_id):
+    db_sess = create_session()
+    collection = db_sess.query(Collections).filter(Collections.id == collection_id).one_or_none()
+    if collection:
+        db_sess.delete(collection)
+        db_sess.commit()
+    else:
+        abort(404)
+    return redirect('/')
 
 
 @app.errorhandler(404)
