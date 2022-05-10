@@ -5,4 +5,4 @@ from wtforms.validators import DataRequired
 
 class CreateTest(FlaskForm):
     number = StringField('Введите № задачи', validators=[DataRequired()])
-    submit = SubmitField('Перейти')
+    submit = SubmitField('Создать')

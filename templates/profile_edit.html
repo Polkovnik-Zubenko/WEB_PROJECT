@@ -57,11 +57,11 @@
                             <hr>
                             <div class="tab-pane fade active in" id="detail">
                                 <h4>Данные пользователя</h4>
-                                <table class="table table-th-block">
-                                    <tbody>
-                                    <form action="" method="POST">
+                                <form action="" method="POST" novalidate>
+                                    <table class="table table-th-block">
+                                        <tbody>
                                         <div>
-                                            {{ form.csrf_token }}
+                                            {{ form.hidden_tag() }}
                                         </div>
                                         <tr>
                                             <td>{{ form.name_surname.label }}</td>
@@ -156,16 +156,17 @@
                                             </tr>
                                         {% endif %}
                                         <tr>
-                                            <div class="" style="display: flex; justify-content: center">
+                                            <div class="submbtn1" style="display: flex; justify-content: center">
                                                 <td colspan="2"
-                                                    class="btn-sub" style="text-align: center">{{ form.submit(type="submit", class="btn btn-primary", style="background-color: #9a0097; color: whitesmoke; border: black" ) }}</td>
+                                                    class="btn-sub"
+                                                    style="text-align: center">{{ form.submit(type="submit", class="btn btn-primary", style="background-color: #9a0097; color: whitesmoke; border: black" ) }}</td>
                                                 <div>{{ message }}</div>
                                             </div>
-
                                         </tr>
-                                    </form>
-                                    </tbody>
-                                </table>
+
+                                        </tbody>
+                                    </table>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -87,14 +87,14 @@
                                                             </a>
                                                             <div class="dropdown-divider" role="presentation"><span
                                                                     class="filler">&nbsp</span></div>
-                                                            <a href="#"
+                                                            <a href="/admin_help"
                                                                class="dropdown-item menu-action" role="menuitem"
                                                                data-title="profile,moodle"
                                                                aria-labelledby="actionmenuaction-2">
-                                                                <i class="icon fa fa-bar-chart fa-fw"
+                                                                <i class="icon fa fa-comments fa-fw"
                                                                    aria-hidden="true"></i>
                                                                 <span class="menu-action-text" id="actionmenuaction-2">
-                                                            Статистика
+                                                            Помощь
                                                         </span>
                                                             </a>
                                                             <div class="dropdown-divider" role="presentation"><span
@@ -335,7 +335,7 @@
                                 {% if current_user.is_authenticated and current_user.type_user == 'teacher' %}
                                     <div class="card-body p-3">
 
-                                        <h5 id="instance-931-header" class="card-title d-inline">Создать сборник
+                                        <h5 id="instance-931-header" class="card-title d-inline">Создание сборника
                                             задач</h5>
                                         <div class="card-text content mt-3">
                                             <a class="btn" href="/create_collection"
@@ -344,27 +344,6 @@
                                     </div>
                                 {% endif %}
                             </section>
-                            <span id="sb-1"></span><a href="#sb-2" class="sr-only sr-only-focusable">Пропустить К задаче
-                                №</a>
-
-                            <section id="inst931"
-                                     class=" block_problembynumber block  card mb-3"
-                                     role="complementary"
-                                     data-block="problembynumber"
-                                     aria-labelledby="instance-931-header"
-                            >
-                                {% if current_user.is_authenticated and current_user.type_user == 'teacher' %}
-                                    <div class="card-body p-3">
-
-                                        <h5 id="instance-931-header" class="card-title d-inline">Создать тест</h5>
-                                        <div class="card-text content mt-3">
-                                            <a class="btn" href="/create_test"
-                                               style="color: whitesmoke; background-color: #9a0097">Создать тест</a>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </section>
-
 
                             <span id="sb-3"></span><a href="#sb-4" class="sr-only sr-only-focusable">Пропустить Основное
                                 меню</a>

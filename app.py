@@ -22,6 +22,7 @@ from files.db_session import SqlAlchemyBase
 from files.new_password import Password
 from files.task_t import Task_t
 from files.tasks import Task
+from forms.help import HelpForm
 from forms.login import LoginForm
 from forms.user import RegisterForm
 from files import db_session
@@ -355,9 +356,9 @@ def profile_edit(id_user):
         else:
             abort(404)
     print(form.validate_on_submit())
+    print(form, '++++++++++')
     if form.validate_on_submit():
         print(form.name_surname.data, form.country_city.data, form.nickname.data, form.gender.data, '__________')
-        db_sess = db_session.create_session()
         u = db_sess.query(User).filter(User.id == id_user).first()
         if u:
             u.name = form.name_surname.data.split(' ')[0]
@@ -429,10 +430,12 @@ def upload_file(title_collection):
     if request.method == "POST":
         id = request.form['id']
         if id == '0':
+            print(123)
             file = request.files['file']
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][0]}", f'{current_user.id}.png'))
             return redirect(url_for('profile', id_user=current_user.id))
         elif id == 'zip':
+            print(456)
             file = request.files['file']
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][2]}", f'{current_user.id}.zip'))
 
@@ -473,6 +476,7 @@ def upload_file(title_collection):
             href = '_'.join([title_collection.split()[1], title_collection.split()[2]])
             return redirect(f'/collection/{href}')
         else:
+            print(678)
             zadacha = request.form['type']
             file = request.files['solut']
             file.save(os.path.join(f"{app.config['UPLOAD_FOLDER'][1]}", 'solution.py'))
@@ -486,8 +490,8 @@ def upload_file(title_collection):
                         input_ = input_.readlines()
                         input_ = [line.rstrip() for line in input_]
                     p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                         encoding='utf-8',
-                                         stdin=subprocess.PIPE)  # запуск файла
+                                        encoding='utf-8',
+                                        stdin=subprocess.PIPE)  # запуск файла
                     for i in input_:  # передача данных в файл
                         p.stdin.write(f'{i}\n')
                     with open(f'{path}/{test}.a') as output_:
@@ -530,8 +534,8 @@ def upload_file(title_collection):
                         input_ = input_.readlines()
                         input_ = [line.rstrip() for line in input_]
                     p = subprocess.Popen(f'python {path_file}', stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                         encoding='utf-8',
-                                         stdin=subprocess.PIPE)  # запуск файла
+                                        encoding='utf-8',
+                                        stdin=subprocess.PIPE)  # запуск файла
                     for i in input_:  # передача данных в файл
                         p.stdin.write(f'{i}\n')
                     with open(f'{path}/{test}.a') as output_:
@@ -592,18 +596,21 @@ def task_page(id_task):
 
 
 @app.route('/task_t/collection/<collection_title>/<int:id_task>')
-def task_page_t(collection_title, id_task):
+def task_page_t(id_task, collection_title=False):
     db_sess = create_session()
     t = db_sess.query(Task_t).filter(Task_t.id == id_task).first()
     return render_template('task_template.html', collection_title=collection_title, t=t, z="t")
 
 
-@app.route('/tasks')
+@app.route('/tasks', methods=["POST", "GET"])
 def tasks():
+    form = CreateTest()
     db_sess = create_session()
     t = db_sess.query(Task).all()
     t_t = db_sess.query(Task_t).all()
-    return render_template('tasks.html', t=t, t_t=t_t)
+    if form.validate_on_submit():
+        return redirect('/create_test_for_user')
+    return render_template('tasks.html', t=t, t_t=t_t, form=form)
 
 
 @app.route('/create-test')
@@ -614,7 +621,7 @@ def create_test():
     return render_template('create_test.html', t=t)
 
 
-@app.route('/create_test_for_user', methods=["POST"])
+@app.route('/create_test_for_user', methods=["GET", "POST"])
 def create_test_for_user():
     flag = False
     id_tests = request.form['tests']
@@ -663,7 +670,7 @@ def created_test_teach(id_teacher, id_test):
                 zadachi = tmp[0].split(',')[:-1]
         return render_template('created_test.html', title=id_test, zadachi=zadachi)
     else:
-        return abort(404)
+        return redirect(url_for('error_404'))
 
 
 @app.route('/create-new-task/<title_collection>')
@@ -675,7 +682,7 @@ def create_new_task(title_collection):
 def all_result():
     db_sess = create_session()
     files = os.listdir('static/tests/results/')
-    all_files = ['Вячеслав Власов//3 1//1 2 3//']
+    all_files = []
     for file in files:
         str_ = ''
         u = db_sess.query(User).filter(User.id == file.split('.')[0]).first()
@@ -695,8 +702,17 @@ def all_result():
                 str_ = f"{str_}//"
         all_files.append(str_)
         print(all_files)
-
     return render_template('all_result.html', all_f=all_files)
+
+
+@app.route('/admin_help', methods=["GET", "POST"])
+def admin_help():
+    form = HelpForm()
+    if form.validate_on_submit():
+        key = 1
+        send_email(current_user.email, key, form.topic.data, form.text.data)
+        return redirect('/')
+    return render_template('help.html', form=form)
 
 
 @app.route('/logout')
