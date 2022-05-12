@@ -49,34 +49,26 @@
                 <th style="text-align: center">Курсы преподавателей</th>
                 <th style="text-align: center">Московская олимпиада школьников</th>
             </tr>
-            {% set tlst = [] %}
-            {% set mlst = [] %}
-            {% for i in all_f %}
-                {% set info = i.split('//') %}
-                {% set info2 = info[1:] %}
-                {% for item in info2 %}
-                    {% set new_item = item.split() %}
-                    {% if new_item[1] == 'c' %}
-                        {% set tlst = tlst + [new_item[0]] %}
-                    {% elif new_item[1] == 't' %}
-                        {% set mlst = mlst + [new_item[0]] %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
             {% for j in all_f %}
                 <tr>
                     {% set info1 = j.split('//') %}
                     <td>{{ info1[0] }}</td>
                     <td>
-                    {% for item1 in tlst %}
-                         <a class="a-href" href="/task_t/{{ item1 }}">{{ item1 }}</a>
-                            </td>
-                    {% endfor %}
+                    {% if info1[1] != '.' %}
+                        {% for item1 in info1[1].split() %}
+                             <a class="a-href" href="/task_t/{{ item1 }}">{{ item1 }}</a>
+
+                        {% endfor %}
+                    {% endif %}
+                    </td>
                     <td>
-                    {% for item2 in mlst %}
-                         <a class="a-href" href="/task_t/{{ item2 }}">{{ item2 }}</a>
-                            </td>
-                    {% endfor %}
+                    {% if info1[2] != '.' %}
+                        {% for item2 in info1[2].split() %}
+                             <a class="a-href" href="/task/{{ item2 }}">{{ item2 }}</a>
+
+                        {% endfor %}
+                    {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

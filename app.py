@@ -659,17 +659,20 @@ def tasks():
     t_t = db_sess.query(Task_t).all()
     if form.validate_on_submit():
         numbers = str(form.number.data)
-        print(numbers)
-        return redirect(f'/create_test_for_user/{numbers}')
+        if set(numbers[1::2]) == {" "}:
+            try_lst = []
+            for i in numbers.split():
+                zapr = db_sess.query(Task).filter(Task.id == int(i)).one_or_none()
+                if zapr:
+                    pass
+                else:
+                    return render_template('tasks.html', t=t, t_t=t_t, form=form,
+                                           message=f'Задача с номером {i} отсутствует в нашей библиотеке')
+            return redirect(f'/create_test_for_user/{numbers}')
+        else:
+            return render_template('tasks.html', t=t, t_t=t_t, form=form,
+                                   message='Неверный формат ввода задач')
     return render_template('tasks.html', t=t, t_t=t_t, form=form)
-
-
-@app.route('/create-test')
-@login_required
-def create_test():
-    db_sess = create_session()
-    t = db_sess.query(Task).all()
-    return render_template('create_test.html', t=t)
 
 
 @app.route('/create_test_for_user/<numbers>', methods=["GET", "POST"])
@@ -721,9 +724,10 @@ def created_test_teach(id_teacher, id_test):
             tmp = i.split(' ')
             if f'/created-test-{id_teacher}/{id_test}' in tmp:
                 zadachi = tmp[0].split(',')[:-1]
-        return render_template('created_test.html', title=id_test, zadachi=zadachi)
+        return render_template('created_test.html', title=id_test,
+                               zadachi=zadachi)
     else:
-        return redirect(url_for('error_404'))
+        return abort(404)
 
 
 @app.route('/create-new-task/<title_collection>')
@@ -738,26 +742,30 @@ def all_result():
     files = os.listdir('static/tests/results/')
     all_files = []
     for file in files:
+        str_ = ''
+        tlst = []
+        mlst = []
         u = db_sess.query(User).filter(User.id == file.split('.')[0]).first()
         str_ = f"{u.name} {u.surname}//"
         with open(f'static/tests/results/{file}') as f:
-            tlst = []
-            clst = []
             g = f.readlines()
             g = [line.rstrip() for line in g]
             print(g)
             for i in g:
-                if i.split()[-1] == "t":
-                    str2_ = f'{i.split()[0]} t//'
-                    str_ = f'{str_}{str2_}'
-                str_ = f"{str_}"
-            for j in g:
-                if j.split()[-1] == "c":
-                    str4_ = f'{j.split()[0]} c//'
-                    str_ = f'{str_}{str4_}'
-                str_ = f"{str_}"
+                i = i.split()
+                if i[-1] == "t":
+                    tlst.append(i[0])
+                if i[-1] == 'c':
+                    mlst.append(i[0])
+        if tlst and mlst:
+            str_ = f"{str_}{' '.join(tlst)}//{' '.join(mlst)}"
+        elif tlst:
+            str_ = f"{str_}{' '.join(tlst)}//."
+        elif mlst:
+            str_ = f"{str_}.//{' '.join(mlst)}"
         all_files.append(str_)
         print(all_files)
+
     return render_template('all_result.html', all_f=all_files)
 
 
@@ -779,4 +787,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
