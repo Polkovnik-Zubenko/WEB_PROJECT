@@ -33,6 +33,20 @@
                 <button type="submit" class="btn btn-primary" style="background-color: #9a0097; color: whitesmoke">
                     Создать
                 </button>
+                <div class="checkform">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% for i in message.split("+") %}
+                                    <p>{{ i }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            <div class="" style="text-align: center; margin-top: 8px"><a href="/collection/{{ back_href }}" class="btn "
+                                                                         style="background-color: #9a0097; color: whitesmoke;">Вернуться
+                в список задач</a></div>
             </p>
         </form>
     </div>

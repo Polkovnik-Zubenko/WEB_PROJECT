@@ -15,6 +15,7 @@ class Collections(SqlAlchemyBase):
     href_link = sqlalchemy.Column(sqlalchemy.String, index=True, nullable=True)
     key_btn = sqlalchemy.Column(sqlalchemy.Integer, index=True, nullable=True)
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    user_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

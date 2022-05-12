@@ -34,8 +34,20 @@
                             {% endif %}
                             <form class="formochka" action="/path" method="post" enctype="multipart/form-data">
                                 <p><input type="file" name="file"></p>
+                                <input type="hidden" name="id" value="0">
                                 <p><input type="submit" value="Загрузить"></p>
                             </form>
+                            <div class="photo1">
+                                {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            {% for i in message.split("+") %}
+                                                <p>{{ i }}</p>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,10 +116,20 @@
                                                         </div>
                                                     {% endfor %}</td>
                                             </tr>
-                                        {% else %}
+                                        {% elif u.gender == "woman" %}
                                             <tr>
                                                 <td> {{ form.gender.label }} </td>
                                                 <td>{{ form.gender(class="form-control", value="Женский") }}<br>
+                                                    {% for error in form.gender.errors %}
+                                                        <div class="alert alert-danger" role="alert">
+                                                            {{ error }}
+                                                        </div>
+                                                    {% endfor %}</td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td> {{ form.gender.label }} </td>
+                                                <td>{{ form.gender(class="form-control") }}<br>
                                                     {% for error in form.gender.errors %}
                                                         <div class="alert alert-danger" role="alert">
                                                             {{ error }}

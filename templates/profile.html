@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://bootstraptema.ru/plugins/2015/bootstrap3/bootstrap.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <script src="https://bootstraptema.ru/plugins/jquery/jquery-1.11.3.min.js"></script>
@@ -34,6 +33,7 @@
                             {% else %}
                                 <img class='photo' src="/static/img/default_photo.jpg">
                             {% endif %}
+                            {{ message1 }}
 
                             <h3>{{ u.name }} {{ u.surname }}</h3>
                             <medium class="label label-warning">{{ u.country }} {{ u.city }}</medium>
@@ -76,10 +76,15 @@
                                             <td class="active">Пол:</td>
                                             <td>Мужской</td>
                                         </tr>
-                                    {% else %}
+                                    {% elif u.gender == "woman"%}
                                         <tr>
                                             <td class="active">Пол:</td>
                                             <td>Женский</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td class="active">Пол:</td>
+                                            <td>{{ u.gender }}</td>
                                         </tr>
                                     {% endif %}
                                     {% if u.type_user == 'student' %}

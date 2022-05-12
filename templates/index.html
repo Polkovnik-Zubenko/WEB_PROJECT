@@ -244,7 +244,7 @@
                                                             <div class="coursename"><a class="aalink"
                                                                                        href="{{ item.href_link }}">{{ item.title }}</a>
                                                             </div>
-                                                            {% if current_user.is_authenticated  and current_user.name + current_user.surname == item.title.split()[0] + item.title.split()[1] %}
+                                                            {% if current_user.is_authenticated  and current_user.id == item.user_id %}
                                                                 {% if delete_flag and key_but == item.key_btn %}
                                                                     <div style="text-align: center">
                                                                         <a href="/"
@@ -343,6 +343,25 @@
                                         </div>
                                     </div>
                                 {% endif %}
+                            </section>
+
+                            <span id="sb-1"></span><a href="#sb-2" class="sr-only sr-only-focusable">Пропустить К задаче
+                                №</a>
+
+                            <section id="inst931"
+                                     class=" block_problembynumber block  card mb-3"
+                                     role="complementary"
+                                     data-block="problembynumber"
+                                     aria-labelledby="instance-931-header"
+                            >
+                                <div class="card-body p-3">
+
+                                    <h5 id="instance-931-header" class="card-title d-inline">Результаты пользователей</h5>
+                                    <div class="card-text content mt-3">
+                                        <a class="btn" href="/all-result"
+                                           style="color: whitesmoke; background-color: #9a0097">Открыть результаты</a>
+                                    </div>
+                                </div>
                             </section>
 
                             <span id="sb-3"></span><a href="#sb-4" class="sr-only sr-only-focusable">Пропустить Основное
