@@ -182,7 +182,11 @@ def confirm_delete(key_but):
 def collection_delete(collection_id):
     db_sess = create_session()
     collection = db_sess.query(Collections).filter(Collections.id == collection_id).one_or_none()
+    print(collection.title)
+    tasks = db_sess.query(Task_t).filter(collection.title == Task_t.title_collection).all()
     if collection:
+        for task in tasks:
+            db_sess.delete(task)
         db_sess.delete(collection)
         db_sess.commit()
     else:
@@ -512,12 +516,12 @@ def upload_file1(title_collection):
                 if os.path.exists(f'static/tests/results/{current_user.id}.txt'):
                     with open(f'static/tests/results/{current_user.id}.txt', mode='r') as f:
                         lines = ''.join(f.readlines()).split('\n')
-                    with open(f'static/tests/results/{current_user.id}.txt', mode='a+') as g:
+                    with open(f'static/tests/results/{current_user.id}.txt', encoding='utf-8', mode='a+') as g:
                         if f'{id} t' not in lines:
-                            print(f'{id} t\n', file=g)
+                            print(f'{id} t {title_collection}\n ', file=g)
                 else:
-                    with open(f'static/tests/results/{current_user.id}.txt', mode='w+') as f:
-                        print(f'{id} t\n', file=f)
+                    with open(f'static/tests/results/{current_user.id}.txt', encoding='utf-8', mode='w+') as f:
+                        print(f'{id} t {title_collection}\n', file=f)
             flash(otv)
             return redirect(url_for('task_page_t', collection_title=title_collection, id_task=id))
         else:
@@ -659,15 +663,8 @@ def tasks():
     t_t = db_sess.query(Task_t).all()
     if form.validate_on_submit():
         numbers = str(form.number.data)
+        print(set(numbers[1::2]))
         if set(numbers[1::2]) == {" "}:
-            try_lst = []
-            for i in numbers.split():
-                zapr = db_sess.query(Task).filter(Task.id == int(i)).one_or_none()
-                if zapr:
-                    pass
-                else:
-                    return render_template('tasks.html', t=t, t_t=t_t, form=form,
-                                           message=f'Задача с номером {i} отсутствует в нашей библиотеке')
             return redirect(f'/create_test_for_user/{numbers}')
         else:
             return render_template('tasks.html', t=t, t_t=t_t, form=form,
@@ -709,8 +706,6 @@ def create_test_for_user(numbers):
             f.close()
     if flag:
         flash(path_to_test)
-    else:
-        flash('Номера задач должны быть записаны через пробел: 1 2 3 4')
     return redirect(url_for('tasks'))
 
 
@@ -747,22 +742,28 @@ def all_result():
         mlst = []
         u = db_sess.query(User).filter(User.id == file.split('.')[0]).first()
         str_ = f"{u.name} {u.surname}//"
-        with open(f'static/tests/results/{file}') as f:
-            g = f.readlines()
-            g = [line.rstrip() for line in g]
+        with open(f'static/tests/results/{file}', encoding='utf-8') as f:
+            n = f.readlines()
+            g = [line.rstrip() for line in n if line != '\n']
             print(g)
             for i in g:
                 i = i.split()
-                if i[-1] == "t":
-                    tlst.append(i[0])
-                if i[-1] == 'c':
-                    mlst.append(i[0])
+                try:
+                    if i[1] == "t":
+                        tlst.append(i[0])
+                        tlst.append(i[-1])
+                    if i[-1] == 'c':
+                        mlst.append(i[0])
+                except Exception:
+                    pass
         if tlst and mlst:
             str_ = f"{str_}{' '.join(tlst)}//{' '.join(mlst)}"
         elif tlst:
             str_ = f"{str_}{' '.join(tlst)}//."
         elif mlst:
             str_ = f"{str_}.//{' '.join(mlst)}"
+        elif not tlst and not mlst:
+            str_ = f"{str_}.//."
         all_files.append(str_)
         print(all_files)
 
