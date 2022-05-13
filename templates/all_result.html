@@ -56,10 +56,11 @@
                     <td>
                         {% if info1[1] != '.' %}
                             {% set lst = info1[1].split() %}
-                            {% for item1 in range(0, 2, (lst | length)) %}
-                                <a class="a-href"
-                                   href="/task_t/collection/{{ lst[item1 + 1] }}/{{ lst[item1] }}">{{ lst[item1] }}</a>
-
+                            {% for item1 in range(0, (lst | length)) %}
+                                {% if item1 % 2 == 0 %}
+                                    <a class="a-href"
+                                       href="/task_t/collection/{{ lst[item1 + 1] }}/{{ lst[item1] }}">{{ lst[item1] }}</a>
+                                {% endif %}
                             {% endfor %}
                         {% endif %}
                     </td>

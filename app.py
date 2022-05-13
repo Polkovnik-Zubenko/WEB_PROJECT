@@ -182,7 +182,6 @@ def confirm_delete(key_but):
 def collection_delete(collection_id):
     db_sess = create_session()
     collection = db_sess.query(Collections).filter(Collections.id == collection_id).one_or_none()
-    print(collection.title)
     tasks = db_sess.query(Task_t).filter(collection.title == Task_t.title_collection).all()
     if collection:
         for task in tasks:
@@ -196,7 +195,6 @@ def collection_delete(collection_id):
 
 @app.errorhandler(404)
 def error_404(err):
-    print(err)
     return render_template('404.html')
 
 
@@ -248,7 +246,6 @@ def forgot_password2(secret_key):
     if similar:
         if form.validate_on_submit():
             user_id = db_sess.query(Password.user_id).filter(Password.key == secret_key).first()
-            print(123, user_id)
             user = db_sess.query(User).filter(User.id == user_id[0]).first()
 
             password_check = [re.search(r"[a-z]", str(form.password.data)),
@@ -357,7 +354,6 @@ def profile_edit(id_user):
             form.country_city.data = f'{u.country} {u.city}'
             form.nickname.data = u.nickname
             form.gender.data = u.gender
-            print(form.name_surname.data, form.country_city.data, form.nickname.data, form.gender.data)
         else:
             abort(404)
     if form.validate_on_submit():
@@ -396,7 +392,6 @@ def recovery_password(id_user):
     path = f'/static/img/profiles/{id_user}.png'
     password_check = [re.search(r"[a-z]", str(form.password.data)), re.search(r"[A-Z]", str(form.password.data)),
                       re.search(r"[0-9]", str(form.password.data))]
-    print(form.validate_on_submit())
     if form.validate_on_submit():
         db_sess = create_session()
         user = db_sess.query(User).filter(User.id == current_user.id).first()
@@ -489,7 +484,6 @@ def upload_file1(title_collection):
             path_file = 'static/solutions/solution.py'
             path = f'static/tests/teachers/{id}/tests'
             otv = 'OK'
-            print(len(glob.glob(f'{path}/*')))
             for test in range(len(glob.glob(f'{path}/*')) // 2):
                 test = f'{test + 1}'
                 with open(f"{path}/{test}", 'r') as input_:
@@ -663,7 +657,6 @@ def tasks():
     t_t = db_sess.query(Task_t).all()
     if form.validate_on_submit():
         numbers = str(form.number.data)
-        print(set(numbers[1::2]))
         if set(numbers[1::2]) == {" "}:
             return redirect(f'/create_test_for_user/{numbers}')
         else:
@@ -677,21 +670,17 @@ def create_test_for_user(numbers):
     flag = False
     id_tests = numbers.split()
     db_sess = create_session()
-    print(id_tests)
     for i in id_tests:
-        print(i)
         if db_sess.query(Task).filter(Task.id == int(i)).first():
             flag = True
         else:
             flag = False
-    print(flag)
     if current_user.is_authenticated and flag:
         id_user = current_user.id
         path_to_test = f'/created-test-{id_user}/{random.randint(0, 10000000)}\n'
         if os.path.exists(f'static/created_tests/created-test{id_user}.txt'):
             f = open(f'static/created_tests/created-test{id_user}.txt', mode='a')
             for i in id_tests:
-                print(i)
                 f.write(i + ',')
             f.write(' ')
             f.write(path_to_test)
@@ -699,7 +688,6 @@ def create_test_for_user(numbers):
         else:
             f = open(f'static/created_tests/created-test{id_user}.txt', mode='w')
             for i in id_tests:
-                print(i)
                 f.write(i + ',')
             f.write(' ')
             f.write(path_to_test)
@@ -745,7 +733,6 @@ def all_result():
         with open(f'static/tests/results/{file}', encoding='utf-8') as f:
             n = f.readlines()
             g = [line.rstrip() for line in n if line != '\n']
-            print(g)
             for i in g:
                 i = i.split()
                 try:
@@ -765,7 +752,6 @@ def all_result():
         elif not tlst and not mlst:
             str_ = f"{str_}.//."
         all_files.append(str_)
-        print(all_files)
 
     return render_template('all_result.html', all_f=all_files)
 
