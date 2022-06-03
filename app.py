@@ -66,9 +66,9 @@ def load_user(user_id):
 
 @app.route('/git_update', methods=['POST'])
 def git_update():
-    repo = git.Repo('./orbe')
+    repo = git.Repo('./WEB_PROJECT')
     origin = repo.remotes.origin
-    repo.create_head('main',
+    repo.create_head('itog',
                      origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
     origin.pull()
     return '', 200
