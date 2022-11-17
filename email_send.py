@@ -10,7 +10,7 @@ def create_secret_key():
 
 def send_email(user_email, itog_secret_key, title=False, message=False):
     sender = "association.olymp.programmers@gmail.com"
-    password = 'qwe9032gn'
+    password = 'kfgzbxlyegbuhlbi'
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
